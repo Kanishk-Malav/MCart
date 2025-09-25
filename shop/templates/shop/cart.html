@@ -1,0 +1,94 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %}Your Shopping Cart - MCart{% endblock %}
+
+{% if messages %}
+<div class="container">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% block content %}
+<div class="container my-5">
+    <h2>Your Shopping Cart</h2>
+    
+    {% if cart.items.all %}
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart.items.all %}
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <img src="{{ MEDIA_URL }}{{ item.product.image }}" alt="{{ item.product.name }}" 
+                                 class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;">
+                            <div class="ms-3">
+                                <h6>{{ item.product.name }}</h6>
+                                <small class="text-muted">{{ item.product.category }}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${{ item.product.price }}</td>
+                    <td>
+                        <form method="post" action="{% url 'shop:update_cart' item.id %}">
+                            {% csrf_token %}
+                            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" 
+                                   class="form-control" style="width: 70px;">
+                        </form>
+                    </td>
+                    <td>${{ item.total_price }}</td>
+                    <td>
+                        <a href="{% url 'shop:remove_from_cart' item.id %}" class="btn btn-danger btn-sm">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                    <td><strong>${{ cart.total_price }}</strong></td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+        
+        <div class="d-flex justify-content-between">
+            <a href="{% url 'shop:product_list' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Continue Shopping
+            </a>
+            <a href="{% url 'shop:checkout' %}" class="btn btn-primary">
+                Proceed to Checkout <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        Your cart is empty. <a href="{% url 'shop:product_list' %}">Start shopping</a>!
+    </div>
+    {% endif %}
+</div>
+
+<script>
+// Auto-submit quantity update forms on change
+document.querySelectorAll('input[name="quantity"]').forEach(input => {
+    input.addEventListener('change', function() {
+        this.form.submit();
+    });
+});
+</script>
+{% endblock %}

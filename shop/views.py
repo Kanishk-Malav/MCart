@@ -15,6 +15,34 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.views.generic import View
 from django.contrib.auth.views import LoginView
 from django.db import OperationalError
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login as django_login
+from django.contrib.auth import logout as django_logout
+
+def website_login(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            django_login(request, user)  # logs in user for Django session
+            return redirect('shop:home')
+        else:
+            # Return the form with errors
+            return render(request, 'shop/login.html', {
+                'form': form,
+                'error': 'Invalid username or password.'
+            })
+    else:
+        # GET request - show empty form
+        form = AuthenticationForm()
+    return render(request, 'shop/login.html', {'form': form})
+
+# Logout view for website authentication
+def website_logout(request):
+    django_logout(request)
+    messages.success(request, "You have been logged out successfully.")
+    return redirect('shop:home')
+
 
 # API Views
 class RegisterView(APIView):
@@ -24,33 +52,48 @@ class RegisterView(APIView):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
+            
+            # Authenticate and log in the user
+            user = authenticate(
+                username=request.data.get('username'),
+                password=request.data.get('password')
+            )
+            if user:
+                login(request, user)  # This logs in the user for Django session
+                
             refresh = RefreshToken.for_user(user)
             return Response({
                 'user': serializer.data,
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
             }, status=status.HTTP_201_CREATED)
+        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
-    
+
     def post(self, request):
-        username = request.data.get('username')
-        password = request.data.get('password')
+        # Accept both JSON and form POST
+        username = request.data.get('username') or request.POST.get('username')
+        password = request.data.get('password') or request.POST.get('password')
+
         user = authenticate(username=username, password=password)
-        
-        if user is not None:
-            login(request, user)
+        if user:
+            login(request, user)  # Django session login
             refresh = RefreshToken.for_user(user)
-            return Response({
-                'refresh': str(refresh),
-                'access': str(refresh.access_token),
-            })
-        return Response(
-            {'error': 'Invalid Credentials'},
-            status=status.HTTP_401_UNAUTHORIZED
-        )
+            # If template form, redirect instead of returning JSON
+            if not request.content_type == 'application/json':
+                return redirect('shop:home')
+            return Response({'refresh': str(refresh), 'access': str(refresh.access_token)})
+        if not request.content_type == 'application/json':
+            return render(request, 'shop/login.html', {'error': 'Invalid Credentials'})
+        return Response({'error': 'Invalid Credentials'}, status=401)
+class LogoutView(APIView):
+    def post(self, request):
+        # For JWT, client just discards the token
+        return Response({'message': 'Logged out successfully'}, status=status.HTTP_200_OK)
 
 class UserProfileView(APIView):
     authentication_classes = [JWTAuthentication]

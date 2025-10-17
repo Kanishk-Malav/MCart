@@ -2,19 +2,20 @@
 
 {% block title %}Login - MCart{% endblock %}
 
-{% block css %}
+{% block extra_css %}
 <style>
     .auth-card {
         max-width: 500px;
-        margin: 2rem auto;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        margin: 3rem auto;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        border-radius: 10px;
     }
     .auth-header {
         background-color: #0d6efd;
         color: white;
-    }
-    .auth-footer {
-        font-size: 0.9rem;
+        padding: 1rem;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
     }
     .error-message {
         color: #dc3545;
@@ -25,234 +26,49 @@
 
 {% block content %}
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card auth-card">
-                <div class="card-header auth-header">
-                    <h4 class="mb-0">Login to Your Account</h4>
+    <div class="card auth-card">
+        <div class="auth-header text-center">
+            <h4 class="mb-0">Welcome Back to MCart</h4>
+        </div>
+        <div class="card-body">
+            <!-- Simple Django form that just works -->
+            <form method="post" action="{% url 'shop:website_login' %}">
+                {% csrf_token %}
+                
+                {% if error %}
+                <div class="alert alert-danger">
+                    {{ error }}
                 </div>
-                <div class="card-body">
-                    <!-- Updated Login Form -->
-                    <form method="post" action="{% url 'shop:login' %}">
-                        {% csrf_token %}
-                        <input type="hidden" name="next" value="{{ request.GET.next }}">
-                        
-                        {% if form.errors %}
-                        <div class="error-message mb-3">
-                            Invalid username or password. Please try again.
-                        </div>
-                        {% endif %}
-                        
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="username" name="username" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
-                        </div>
-                        
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">
-                                Login
-                            </button>
-                        </div>
-                            {% if messages %}
-                            <div class="alert alert-info">
-                                {% for message in messages %}
-                                    {{ message }}
-                                {% endfor %}
-                            </div>
-                            {% endif %}
-                    </form>
-                    
-                    <div class="auth-footer mt-3 text-center">
-                        <p class="mb-1">Don't have an account? <a href="#" id="showRegister">Register here</a></p>
-                        <p class="mb-0"><a href="#">Forgot password?</a></p>
-                    </div>
+                {% endif %}
+
+                {% if form.errors %}
+                <div class="alert alert-danger">
+                    Please enter a correct username and password.
                 </div>
+                {% endif %}
+
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" name="username" id="username" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" name="password" id="password" class="form-control" required>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </div>
+            </form>
+
+            <div class="auth-footer mt-3">
+                <p class="mb-1">Don't have an account? 
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal">Register here</a>
+                </p>
+                <p><a href="#">Forgot Password?</a></p>
             </div>
         </div>
     </div>
 </div>
-
-<!-- Registration Modal -->
-<div class="modal fade" id="registerModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header auth-header">
-                <h5 class="modal-title">Create Account</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="registerForm">
-                    {% csrf_token %}
-                    <div id="registerError" class="error-message mb-3" style="display: none;"></div>
-                    
-                    <div class="mb-3">
-                        <label for="reg_username" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="reg_username" required>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="reg_email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="reg_email" required>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="reg_password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="reg_password" required>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="reg_first_name" class="form-label">First Name</label>
-                            <input type="text" class="form-control" id="reg_first_name">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="reg_last_name" class="form-label">Last Name</label>
-                            <input type="text" class="form-control" id="reg_last_name">
-                        </div>
-                    </div>
-                    
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary" id="registerButton">
-                            <span id="registerButtonText">Register</span>
-                            <span id="registerSpinner" class="spinner-border spinner-border-sm" style="display: none;"></span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Elements
-    const registerForm = document.getElementById('registerForm');
-    const showRegister = document.getElementById('showRegister');
-    const registerModal = new bootstrap.Modal('#registerModal');
-    
-    // Error displays
-    const registerError = document.getElementById('registerError');
-    
-    // Show register modal
-    showRegister.addEventListener('click', function(e) {
-        e.preventDefault();
-        registerModal.show();
-    });
-
-    // Handle registration
-    registerForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        // Show loading state
-        const registerButton = document.getElementById('registerButton');
-        const registerButtonText = document.getElementById('registerButtonText');
-        const registerSpinner = document.getElementById('registerSpinner');
-        
-        registerButton.disabled = true;
-        registerButtonText.textContent = 'Registering...';
-        registerSpinner.style.display = 'inline-block';
-        registerError.style.display = 'none';
-        
-        try {
-            const response = await fetch('/api/auth/register/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-                },
-                body: JSON.stringify({
-                    username: document.getElementById('reg_username').value,
-                    email: document.getElementById('reg_email').value,
-                    password: document.getElementById('reg_password').value,
-                    first_name: document.getElementById('reg_first_name').value,
-                    last_name: document.getElementById('reg_last_name').value
-                })
-            });
-            
-            const data = await response.json();
-            
-            if (response.ok) {
-                // Store tokens
-                localStorage.setItem('access_token', data.access);
-                localStorage.setItem('refresh_token', data.refresh);
-                
-                // Close modal and redirect
-                registerModal.hide();
-                window.location.href = '/';
-            } else {
-                // Show error message
-                let errorMessage = 'Registration failed';
-                if (data.username) errorMessage = data.username[0];
-                else if (data.email) errorMessage = data.email[0];
-                else if (data.password) errorMessage = data.password[0];
-                else if (data.detail) errorMessage = data.detail;
-                
-                registerError.textContent = errorMessage;
-                registerError.style.display = 'block';
-            }
-        } catch (error) {
-            console.error('Registration error:', error);
-            registerError.textContent = 'Network error. Please try again.';
-            registerError.style.display = 'block';
-        } finally {
-            // Reset button state
-            registerButton.disabled = false;
-            registerButtonText.textContent = 'Register';
-            registerSpinner.style.display = 'none';
-        }
-    });
-});
-
-// Token management functions
-async function refreshToken() {
-    const refreshToken = localStorage.getItem('refresh_token');
-    if (!refreshToken) {
-        window.location.href = '/accounts/login/';
-        return null;
-    }
-
-    try {
-        const response = await fetch('/api/token/refresh/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ refresh: refreshToken })
-        });
-        
-        if (!response.ok) throw new Error('Token refresh failed');
-        
-        const data = await response.json();
-        localStorage.setItem('access_token', data.access);
-        return data.access;
-    } catch (error) {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-        window.location.href = '/accounts/login/';
-        return null;
-    }
-}
-
-async function authFetch(url, options = {}) {
-    options.headers = options.headers || {};
-    options.headers['Authorization'] = `Bearer ${localStorage.getItem('access_token')}`;
-    
-    let response = await fetch(url, options);
-    
-    if (response.status === 401) {
-        const newToken = await refreshToken();
-        if (newToken) {
-            options.headers['Authorization'] = `Bearer ${newToken}`;
-            response = await fetch(url, options);
-        }
-    }
-    
-    return response;
-}
-</script>
 {% endblock %}

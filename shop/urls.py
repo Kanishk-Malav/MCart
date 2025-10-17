@@ -33,4 +33,8 @@ urlpatterns = [
     path('api/auth/register/', RegisterView.as_view(), name='auth_register'),
     path('api/auth/login/', LoginView.as_view(), name='auth_login'),
     path('api/auth/profile/', UserProfileView.as_view(), name='auth_profile'),
+
+    # Website Authentication
+    path('login/', views.website_login, name='website_login'),
+    path('logout/', views.website_logout, name='website_logout'),
 ]

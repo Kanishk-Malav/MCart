@@ -30,61 +30,107 @@
     {% block extra_css %}{% endblock %}
   </head>
   <body>
-    <!-- Updated navbar section -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-  <div class="container">
-      <a class="navbar-brand" href="{% url 'shop:home' %}">Mcart</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+      <div class="container">
+        <a class="navbar-brand" href="{% url 'shop:home' %}">Mcart</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
           <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav me-auto">
-              <!-- Existing nav items -->
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'shop:home' %}">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'shop:product_list' %}">Wishlist</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Address</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Blog</a>
+            </li>
           </ul>
+          
           <div class="d-flex">
-              <!-- Search form -->
-              <ul class="navbar-nav align-items-center">
-                  <!-- User dropdown -->
-                  {% if user.is_authenticated %}
-                  <li class="nav-item dropdown">
-                      <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                          <i class="bi bi-person"></i> {{ user.username }}
-                      </a>
-                      <ul class="dropdown-menu dropdown-menu-end">
-                          <li><a class="dropdown-item" href="#">Profile</a></li>
-                          
-                      </ul>
+            <ul class="navbar-nav align-items-center">
+              <!-- Search Form -->
+              <li class="nav-item me-3">
+                <form class="d-flex" method="GET" action="{% url 'shop:search' %}">
+                  <input class="form-control me-2" type="search" name="q" placeholder="Search products..." aria-label="Search">
+                  <button class="btn btn-outline-light" type="submit">
+                    <i class="bi bi-search"></i>
+                  </button>
+                </form>
+              </li>
+              
+              <!-- User Authentication Section -->
+              {% if user.is_authenticated %}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                  <i class="bi bi-person-circle"></i> {{ user.username }}
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li><a class="dropdown-item" href="#">
+                    <i class="bi bi-person"></i> Profile
+                  </a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li>
+                    <a class="dropdown-item text-danger" href="{% url 'shop:website_logout' %}">
+                      <i class="bi bi-box-arrow-right"></i> Logout
+                    </a>
                   </li>
-                  {% else %}
-                  <li class="nav-item">
-                      <a class="nav-link" href="{% url 'shop:login' %}">Login</a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#registerModal">Register</a>
-                  </li>
+                </ul>
+              </li>
+              {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'shop:website_login' %}">
+                  <i class="bi bi-box-arrow-in-right"></i> Login
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#registerModal">
+                  <i class="bi bi-person-plus"></i> Register
+                </a>
+              </li>
+              {% endif %}
+              
+              <!-- Cart Button -->
+              <li class="nav-item ms-2">
+                <a href="{% url 'shop:view_cart' %}" class="btn btn-outline-light position-relative">
+                  <i class="bi bi-cart3"></i>
+                  {% if user.is_authenticated and user.cart.total_items > 0 %}
+                  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {{ user.cart.total_items }}
+                  </span>
                   {% endif %}
-                  
-                  <!-- Cart button -->
-                  <li class="nav-item">
-                      <a href="{% url 'shop:view_cart' %}" class="btn btn-outline-light position-relative">
-                          <i class="bi bi-cart"></i>
-                          {% if user.is_authenticated and user.cart.total_items > 0 %}
-                          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                              {{ user.cart.total_items }}
-                          </span>
-                          {% endif %}
-                      </a>
-                  </li>
-              </ul>
+                </a>
+              </li>
+            </ul>
           </div>
+        </div>
       </div>
-  </div>
-</nav>
+    </nav>
 
+    <!-- Messages Display -->
+    {% if messages %}
+    <div class="container mt-3">
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content -->
     <div class="container my-4">
       {% block content %}{% endblock %}
     </div>
 
+    <!-- Footer -->
     <footer class="bg-dark text-white py-4 mt-5">
       <div class="container">
         <div class="row">
@@ -96,7 +142,9 @@
             <h5>Quick Links</h5>
             <ul class="list-unstyled">
               <li><a href="{% url 'shop:home' %}" class="text-white">Home</a></li>
+              <li><a href="{% url 'shop:product_list' %}" class="text-white">Products</a></li>
               <li><a href="{% url 'shop:about' %}" class="text-white">About Us</a></li>
+              <li><a href="{% url 'shop:contact' %}" class="text-white">Contact</a></li>
             </ul>
           </div>
           <div class="col-md-4">
@@ -104,7 +152,7 @@
             <address>
               <p><i class="bi bi-geo-alt"></i> Kota, Rajasthan, India</p>
               <p><i class="bi bi-envelope"></i> malavkanishq2@gmail.com</p>
-              <p><i class="bi bi-phone"></i> +1 234 567 890</p>
+              <p><i class="bi bi-phone"></i> +91 8875212697</p>
             </address>
           </div>
         </div>
@@ -117,5 +165,108 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     {% block extra_js %}{% endblock %}
+
+    <!-- Register Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">Create Account</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form id="registerForm">
+              {% csrf_token %}
+              <div id="registerError" class="alert alert-danger mb-3" style="display:none;"></div>
+
+              <div class="mb-3">
+                <label for="reg_username" class="form-label">Username</label>
+                <input type="text" id="reg_username" class="form-control" required>
+              </div>
+              <div class="mb-3">
+                <label for="reg_email" class="form-label">Email</label>
+                <input type="email" id="reg_email" class="form-control" required>
+              </div>
+              <div class="mb-3">
+                <label for="reg_password" class="form-label">Password</label>
+                <input type="password" id="reg_password" class="form-control" required>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="reg_first_name" class="form-label">First Name</label>
+                  <input type="text" id="reg_first_name" class="form-control">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="reg_last_name" class="form-label">Last Name</label>
+                  <input type="text" id="reg_last_name" class="form-control">
+                </div>
+              </div>
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary" id="registerButton">
+                  <span id="registerButtonText">Register</span>
+                  <span id="registerSpinner" class="spinner-border spinner-border-sm" style="display:none;"></span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const registerForm = document.getElementById('registerForm');
+      const registerButton = document.getElementById('registerButton');
+      const registerButtonText = document.getElementById('registerButtonText');
+      const registerSpinner = document.getElementById('registerSpinner');
+      const registerError = document.getElementById('registerError');
+
+      registerForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        registerButton.disabled = true;
+        registerButtonText.textContent = 'Registering...';
+        registerSpinner.style.display = 'inline-block';
+        registerError.style.display = 'none';
+
+        try {
+          const response = await fetch('/api/auth/register/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({
+              username: document.getElementById('reg_username').value,
+              email: document.getElementById('reg_email').value,
+              password: document.getElementById('reg_password').value,
+              first_name: document.getElementById('reg_first_name').value,
+              last_name: document.getElementById('reg_last_name').value
+            })
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            alert("🎉 Registration successful! You can now log in.");
+            const modal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
+            modal.hide();
+            registerForm.reset();
+          } else {
+            registerError.textContent = data.detail || data.username?.[0] || data.email?.[0] || data.password?.[0] || 'Registration failed';
+            registerError.style.display = 'block';
+          }
+        } catch (error) {
+          console.error('Registration error:', error);
+          registerError.textContent = 'Network error. Please try again.';
+          registerError.style.display = 'block';
+        } finally {
+          registerButton.disabled = false;
+          registerButtonText.textContent = 'Register';
+          registerSpinner.style.display = 'none';
+        }
+      });
+    });
+    </script>
+
   </body>
 </html>

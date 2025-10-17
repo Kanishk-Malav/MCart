@@ -55,10 +55,15 @@ WSGI_APPLICATION = 'MCart.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(PROJECT_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'mcart_db',
+        'USER': 'mcart_user',
+        'PASSWORD': 'Kanishk@16',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     # ... (keep your existing validators) ...

@@ -1,0 +1,110 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %}My Profile - MCart{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h2>My Profile</h2>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <!-- Profile Info -->
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <i class="bi bi-person-circle" style="font-size: 4rem;"></i>
+                    <h5 class="mt-2">{{ user.get_full_name|default:user.username }}</h5>
+                    <p class="text-muted">{{ user.email }}</p>
+                    <p class="text-muted">Member since {{ user.date_joined|date:"F Y" }}</p>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="card">
+                <div class="card-header">
+                    <h6>Quick Stats</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <h4>{{ user.orders.count }}</h4>
+                            <small class="text-muted">Orders</small>
+                        </div>
+                        <div class="col-6">
+                            <h4>{{ user.wishlist_set.count }}</h4>
+                            <small class="text-muted">Wishlist</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <!-- Addresses -->
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5>My Addresses</h5>
+                    <a href="{% url 'shop:add_address' %}" class="btn btn-primary btn-sm">Add New Address</a>
+                </div>
+                <div class="card-body">
+                    {% if addresses %}
+                        {% for address in addresses %}
+                        <div class="border rounded p-3 mb-3">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6>{{ address.name }} 
+                                        <span class="badge bg-secondary">{{ address.get_type_display }}</span>
+                                        {% if address.is_default %}
+                                        <span class="badge bg-primary">Default</span>
+                                        {% endif %}
+                                    </h6>
+                                    <p class="mb-1">{{ address.address_line_1 }}</p>
+                                    {% if address.address_line_2 %}
+                                    <p class="mb-1">{{ address.address_line_2 }}</p>
+                                    {% endif %}
+                                    <p class="mb-1">{{ address.city }}, {{ address.state }} {{ address.postal_code }}</p>
+                                    <p class="mb-0"><strong>Phone:</strong> {{ address.phone }}</p>
+                                </div>
+                                <div>
+                                    <button class="btn btn-outline-primary btn-sm">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">No addresses added yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Recent Orders -->
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5>Recent Orders</h5>
+                    <a href="{% url 'shop:order_list' %}" class="btn btn-outline-primary btn-sm">View All</a>
+                </div>
+                <div class="card-body">
+                    {% if recent_orders %}
+                        {% for order in recent_orders %}
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h6>Order #{{ order.order_number }}</h6>
+                                <small class="text-muted">{{ order.created_at|date:"M d, Y" }} • {{ order.items.count }} item{{ order.items.count|pluralize }}</small>
+                            </div>
+                            <div class="text-end">
+                                <p class="mb-0">₹{{ order.total_amount }}</p>
+                                <span class="badge bg-{% if order.status == 'delivered' %}success{% elif order.status == 'cancelled' %}danger{% else %}primary{% endif %}">
+                                    {{ order.get_status_display }}
+                                </span>
+                            </div>
+                        </div>
+                        {% if not forloop.last %}<hr>{% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">No orders yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

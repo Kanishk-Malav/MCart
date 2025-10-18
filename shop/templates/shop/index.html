@@ -45,12 +45,17 @@
                         <strong>${{ product.price }}</strong>
                         {% endif %}
                     </p>
-                    <a href="{% url 'shop:product_detail' product.id product.slug %}" class="btn btn-primary">
+                    <a href="{% url 'shop:product_detail' product.id product.slug %}" class="btn btn-primary btn-sm">
                         View Details
                     </a>
-                    <a href="{% url 'shop:add_to_cart' product.id %}" class="btn btn-outline-primary">
+                    <a href="{% url 'shop:add_to_cart' product.id %}" class="btn btn-outline-primary btn-sm">
                         <i class="bi bi-cart-plus"></i>
                     </a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'shop:add_to_wishlist' product.id %}" class="btn btn-outline-danger btn-sm">
+                        <i class="bi bi-heart"></i>
+                    </a>
+                    {% endif %}
                 </div>
             </div>
         </div>

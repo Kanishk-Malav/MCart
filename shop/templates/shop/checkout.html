@@ -1,0 +1,287 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %}Checkout - MCart{% endblock %}
+
+{% block extra_css %}
+<style>
+    .checkout-step {
+        border-left: 3px solid #e9ecef;
+        padding-left: 1rem;
+    }
+    .checkout-step.active {
+        border-left-color: #0d6efd;
+    }
+    .checkout-step.completed {
+        border-left-color: #198754;
+    }
+    .step-number {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 10px;
+    }
+    .step-number.active {
+        background-color: #0d6efd;
+        color: white;
+    }
+    .step-number.completed {
+        background-color: #198754;
+        color: white;
+    }
+    .step-number.pending {
+        background-color: #e9ecef;
+        color: #6c757d;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <!-- Checkout Progress -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <span class="step-number active">1</span>
+                    <span>Shipping Details</span>
+                </div>
+                <div class="flex-grow-1 mx-3">
+                    <hr class="my-0">
+                </div>
+                <div class="d-flex align-items-center">
+                    <span class="step-number pending">2</span>
+                    <span>Payment</span>
+                </div>
+                <div class="flex-grow-1 mx-3">
+                    <hr class="my-0">
+                </div>
+                <div class="d-flex align-items-center">
+                    <span class="step-number pending">3</span>
+                    <span>Confirmation</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2>Secure Checkout</h2>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <form method="post">
+                {% csrf_token %}
+                
+                <!-- Shipping Information -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Shipping Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="shipping_name" class="form-label">Full Name *</label>
+                                <input type="text" class="form-control" id="shipping_name" name="shipping_name" 
+                                       value="{{ user.get_full_name }}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="shipping_email" class="form-label">Email *</label>
+                                <input type="email" class="form-control" id="shipping_email" name="shipping_email" 
+                                       value="{{ user.email }}" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="shipping_phone" class="form-label">Phone *</label>
+                                <input type="tel" class="form-control" id="shipping_phone" name="shipping_phone" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="shipping_address" class="form-label">Address *</label>
+                            <textarea class="form-control" id="shipping_address" name="shipping_address" rows="3" required></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="shipping_city" class="form-label">City *</label>
+                                <input type="text" class="form-control" id="shipping_city" name="shipping_city" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="shipping_state" class="form-label">State *</label>
+                                <input type="text" class="form-control" id="shipping_state" name="shipping_state" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="shipping_postal_code" class="form-label">Postal Code *</label>
+                                <input type="text" class="form-control" id="shipping_postal_code" name="shipping_postal_code" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Method -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Payment Method</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="payment_method" id="cod" value="cod" checked>
+                            <label class="form-check-label" for="cod">
+                                Cash on Delivery (COD)
+                            </label>
+                        </div>
+                        <small class="text-muted">Pay when your order is delivered to your doorstep.</small>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'shop:view_cart' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to Cart
+                    </a>
+                    <button type="submit" class="btn btn-primary btn-lg" id="place-order-btn">
+                        <span id="btn-text">
+                            <i class="bi bi-lock"></i> Place Order Securely
+                        </span>
+                        <span id="btn-loading" class="d-none">
+                            <span class="spinner-border spinner-border-sm" role="status"></span>
+                            Processing...
+                        </span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    {% for item in cart.items.all %}
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>{{ item.product.name }} x {{ item.quantity }}</span>
+                        <span>₹{{ item.total_price }}</span>
+                    </div>
+                    {% endfor %}
+                    
+                    <hr>
+                    
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal:</span>
+                        <span>₹{{ subtotal }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Shipping:</span>
+                        <span>₹{{ shipping_cost }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Tax (18% GST):</span>
+                        <span>₹{{ tax_amount }}</span>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="d-flex justify-content-between">
+                        <strong>Total:</strong>
+                        <strong>₹{{ subtotal|add:shipping_cost|add:tax_amount }}</strong>
+                    </div>
+                    
+                    {% if free_shipping_remaining %}
+                    <small class="text-muted mt-2">Add ₹{{ free_shipping_remaining }} more for free shipping!</small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const placeOrderBtn = document.getElementById('place-order-btn');
+    const btnText = document.getElementById('btn-text');
+    const btnLoading = document.getElementById('btn-loading');
+
+    // Form validation
+    form.addEventListener('submit', function(e) {
+        // Show loading state
+        placeOrderBtn.disabled = true;
+        btnText.classList.add('d-none');
+        btnLoading.classList.remove('d-none');
+
+        // Basic validation
+        const requiredFields = form.querySelectorAll('[required]');
+        let isValid = true;
+
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                field.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                field.classList.remove('is-invalid');
+            }
+        });
+
+        // Phone validation
+        const phone = document.getElementById('shipping_phone');
+        const phoneRegex = /^[6-9]\d{9}$/;
+        if (phone.value && !phoneRegex.test(phone.value)) {
+            phone.classList.add('is-invalid');
+            isValid = false;
+            alert('Please enter a valid 10-digit Indian mobile number');
+        }
+
+        // Postal code validation
+        const postalCode = document.getElementById('shipping_postal_code');
+        const postalRegex = /^[1-9][0-9]{5}$/;
+        if (postalCode.value && !postalRegex.test(postalCode.value)) {
+            postalCode.classList.add('is-invalid');
+            isValid = false;
+            alert('Please enter a valid 6-digit postal code');
+        }
+
+        if (!isValid) {
+            e.preventDefault();
+            // Reset button state
+            placeOrderBtn.disabled = false;
+            btnText.classList.remove('d-none');
+            btnLoading.classList.add('d-none');
+        }
+    });
+
+    // Real-time validation
+    const inputs = form.querySelectorAll('input, textarea');
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            if (this.hasAttribute('required') && !this.value.trim()) {
+                this.classList.add('is-invalid');
+            } else {
+                this.classList.remove('is-invalid');
+            }
+        });
+
+        input.addEventListener('input', function() {
+            if (this.classList.contains('is-invalid') && this.value.trim()) {
+                this.classList.remove('is-invalid');
+            }
+        });
+    });
+
+    // Auto-fill from saved addresses (if any)
+    const savedAddresses = document.querySelectorAll('.saved-address');
+    savedAddresses.forEach(address => {
+        address.addEventListener('click', function() {
+            const data = JSON.parse(this.dataset.address);
+            document.getElementById('shipping_name').value = data.name;
+            document.getElementById('shipping_phone').value = data.phone;
+            document.getElementById('shipping_address').value = data.address_line_1 + (data.address_line_2 ? '\n' + data.address_line_2 : '');
+            document.getElementById('shipping_city').value = data.city;
+            document.getElementById('shipping_state').value = data.state;
+            document.getElementById('shipping_postal_code').value = data.postal_code;
+        });
+    });
+});
+</script>

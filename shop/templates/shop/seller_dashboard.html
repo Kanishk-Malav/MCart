@@ -1,0 +1,83 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %}Seller Dashboard - MCart{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Seller Dashboard</h2>
+            <p class="text-muted">Welcome, {{ seller.user.get_full_name|default:seller.user.username }}!</p>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4>Your Store Information</h4>
+                    {% if seller.is_approved %}
+                        <span class="badge bg-success">Approved</span>
+                    {% else %}
+                        <span class="badge bg-warning">Pending Approval</span>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Store Details</h6>
+                            <p><strong>Store Name:</strong> {{ seller.store_name }}</p>
+                            <p><strong>Description:</strong> {{ seller.store_description|default:"Not provided" }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Contact Information</h6>
+                            <p><strong>Phone:</strong> {{ seller.phone }}</p>
+                            <p><strong>Address:</strong> {{ seller.address }}</p>
+                        </div>
+                    </div>
+                    
+                    {% if not seller.is_approved %}
+                        <div class="alert alert-warning">
+                            <i class="bi bi-clock"></i> Your seller application is pending approval. 
+                            You will be notified once it's reviewed by our team.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Quick Stats</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center">
+                        <h3 class="text-primary">{{ seller.is_approved|yesno:"Active,Pending" }}</h3>
+                        <p class="text-muted">Account Status</p>
+                    </div>
+                    <hr>
+                    <p><strong>Joined:</strong> {{ seller.user.date_joined|date:"M d, Y" }}</p>
+                    <p><strong>Email:</strong> {{ seller.user.email }}</p>
+                </div>
+            </div>
+            
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5>Actions</h5>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'shop:home' %}" class="btn btn-primary btn-block mb-2">
+                        <i class="bi bi-house"></i> Go to Store
+                    </a>
+                    {% if seller.is_approved %}
+                        <a href="{% url 'shop:seller_list' %}" class="btn btn-success btn-block">
+                            <i class="bi bi-eye"></i> View Public Profile
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

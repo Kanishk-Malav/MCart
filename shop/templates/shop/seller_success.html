@@ -1,0 +1,9 @@
+{% extends 'shop/basic.html' %}
+
+{% block content %}
+<div class="container text-center mt-5">
+  <h2>Seller Application Submitted!</h2>
+  <p>Thank you for applying. Our team will review your request soon.</p>
+  <a href="{% url 'shop:home' %}" class="btn btn-primary mt-3">Back to Home</a>
+</div>
+{% endblock %}

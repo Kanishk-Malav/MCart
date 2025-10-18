@@ -1,0 +1,44 @@
+Dear {{ user.get_full_name|default:user.username }},
+
+Thank you for your order! We're excited to confirm that we've received your order and it's being processed.
+
+ORDER DETAILS
+=============
+Order Number: {{ order.order_number }}
+Order Date: {{ order.created_at|date:"F d, Y g:i A" }}
+Total Amount: ₹{{ order.total_amount }}
+
+ITEMS ORDERED
+=============
+{% for item in order.items.all %}{{ item.quantity }}x {{ item.product.name }} - ₹{{ item.total_price }}
+{% endfor %}
+
+SHIPPING ADDRESS
+================
+{{ order.shipping_name }}
+{{ order.shipping_address }}
+{{ order.shipping_city }}, {{ order.shipping_state }} {{ order.shipping_postal_code }}
+Phone: {{ order.shipping_phone }}
+
+PAYMENT INFORMATION
+===================
+Payment Method: Cash on Delivery
+Amount to be paid on delivery: ₹{{ order.total_amount }}
+
+WHAT'S NEXT?
+============
+1. We'll process your order within 1-2 business days
+2. Once shipped, you'll receive tracking information
+3. Expected delivery: 5-7 business days
+
+You can track your order status anytime by visiting:
+https://mcart.com/order/{{ order.order_number }}/
+
+If you have any questions, please contact our customer support:
+Email: support@mcart.com
+Phone: +91 8875212697
+
+Thank you for choosing MCart!
+
+Best regards,
+The MCart Team

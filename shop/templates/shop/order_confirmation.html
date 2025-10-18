@@ -1,0 +1,252 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %}Order Confirmation - MCart{% endblock %}
+
+{% block extra_css %}
+<style>
+    .confirmation-header {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        padding: 3rem 0;
+        text-align: center;
+    }
+    .order-timeline {
+        position: relative;
+        padding-left: 2rem;
+    }
+    .order-timeline::before {
+        content: '';
+        position: absolute;
+        left: 15px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #e9ecef;
+    }
+    .timeline-item {
+        position: relative;
+        margin-bottom: 2rem;
+    }
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: -23px;
+        top: 5px;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #28a745;
+        border: 3px solid white;
+        box-shadow: 0 0 0 3px #e9ecef;
+    }
+    .timeline-item.pending::before {
+        background: #6c757d;
+    }
+    .success-animation {
+        animation: bounce 1s ease-in-out;
+    }
+    @keyframes bounce {
+        0%, 20%, 60%, 100% { transform: translateY(0); }
+        40% { transform: translateY(-20px); }
+        80% { transform: translateY(-10px); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Success Header -->
+<div class="confirmation-header">
+    <div class="container">
+        <div class="success-animation">
+            <i class="bi bi-check-circle-fill" style="font-size: 4rem;"></i>
+        </div>
+        <h1 class="mt-3">Order Placed Successfully!</h1>
+        <p class="lead">Thank you for your order. We'll send you a confirmation email shortly.</p>
+        <h3 class="mt-3">Order #{{ order.order_number }}</h3>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Order Details -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    {% for item in order.items.all %}
+                    <div class="row mb-3">
+                        <div class="col-md-2">
+                            <img src="{{ item.product.main_image.url }}" class="img-fluid rounded" alt="{{ item.product.name }}">
+                        </div>
+                        <div class="col-md-6">
+                            <h6>{{ item.product.name }}</h6>
+                            <p class="text-muted mb-0">Quantity: {{ item.quantity }}</p>
+                            <small class="text-muted">₹{{ item.price }} each</small>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <strong>₹{{ item.total_price }}</strong>
+                        </div>
+                    </div>
+                    {% if not forloop.last %}<hr>{% endif %}
+                    {% endfor %}
+                    
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <strong>Total Amount</strong>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <h4 class="text-success">₹{{ order.total_amount }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shipping Information -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Shipping Details</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Delivery Address</h6>
+                            <address>
+                                <strong>{{ order.shipping_name }}</strong><br>
+                                {{ order.shipping_address }}<br>
+                                {{ order.shipping_city }}, {{ order.shipping_state }} {{ order.shipping_postal_code }}<br>
+                                Phone: {{ order.shipping_phone }}<br>
+                                Email: {{ order.shipping_email }}
+                            </address>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Estimated Delivery</h6>
+                            <p class="text-success">
+                                <i class="bi bi-truck"></i>
+                                {% if order.estimated_delivery %}
+                                    {{ order.estimated_delivery|date:"F d, Y" }}
+                                {% else %}
+                                    5-7 business days
+                                {% endif %}
+                            </p>
+                            <small class="text-muted">We'll send you tracking information once your order ships.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Timeline -->
+            <div class="card">
+                <div class="card-header">
+                    <h5>Order Status</h5>
+                </div>
+                <div class="card-body">
+                    <div class="order-timeline">
+                        <div class="timeline-item">
+                            <h6>Order Placed</h6>
+                            <p class="text-muted mb-0">{{ order.created_at|date:"F d, Y g:i A" }}</p>
+                            <small class="text-success">✓ Completed</small>
+                        </div>
+                        <div class="timeline-item pending">
+                            <h6>Order Confirmed</h6>
+                            <p class="text-muted mb-0">We're processing your order</p>
+                            <small class="text-muted">Pending</small>
+                        </div>
+                        <div class="timeline-item pending">
+                            <h6>Shipped</h6>
+                            <p class="text-muted mb-0">Your order is on its way</p>
+                            <small class="text-muted">Pending</small>
+                        </div>
+                        <div class="timeline-item pending">
+                            <h6>Delivered</h6>
+                            <p class="text-muted mb-0">Order delivered to your address</p>
+                            <small class="text-muted">Pending</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <!-- Quick Actions -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>What's Next?</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'shop:order_detail' order.order_number %}" class="btn btn-primary">
+                            <i class="bi bi-eye"></i> View Order Details
+                        </a>
+                        <a href="{% url 'shop:order_list' %}" class="btn btn-outline-primary">
+                            <i class="bi bi-list"></i> View All Orders
+                        </a>
+                        <a href="{% url 'shop:product_list' %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Continue Shopping
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Info -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Order Information</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Order Number:</strong><br>{{ order.order_number }}</p>
+                    <p><strong>Order Date:</strong><br>{{ order.created_at|date:"F d, Y" }}</p>
+                    <p><strong>Payment Method:</strong><br>Cash on Delivery</p>
+                    <p><strong>Total Amount:</strong><br><span class="text-success">₹{{ order.total_amount }}</span></p>
+                </div>
+            </div>
+
+            <!-- Help -->
+            <div class="card">
+                <div class="card-header">
+                    <h5>Need Help?</h5>
+                </div>
+                <div class="card-body">
+                    <p class="small">If you have any questions about your order, please contact our customer support.</p>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'shop:contact' %}" class="btn btn-outline-info btn-sm">
+                            <i class="bi bi-headset"></i> Contact Support
+                        </a>
+                        <a href="mailto:support@mcart.com" class="btn btn-outline-info btn-sm">
+                            <i class="bi bi-envelope"></i> Email Us
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Modal (Auto-show) -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center p-4">
+                <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                <h4 class="mt-3">Order Placed Successfully!</h4>
+                <p>Your order #{{ order.order_number }} has been placed and will be processed shortly.</p>
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Great!</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-show success modal
+    {% if recently_placed %}
+    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+    setTimeout(() => {
+        successModal.show();
+    }, 500);
+    {% endif %}
+});
+</script>
+{% endblock %}

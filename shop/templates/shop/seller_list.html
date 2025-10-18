@@ -1,0 +1,41 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %}Our Sellers - MCart{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">Our Approved Sellers</h2>
+    
+    {% if sellers %}
+        <div class="row">
+            {% for seller in sellers %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ seller.store_name }}</h5>
+                        <p class="card-text">
+                            <small class="text-muted">Owner: {{ seller.user.get_full_name|default:seller.user.username }}</small>
+                        </p>
+                        {% if seller.store_description %}
+                            <p class="card-text">{{ seller.store_description|truncatewords:20 }}</p>
+                        {% endif %}
+                        <p class="card-text">
+                            <i class="bi bi-telephone"></i> {{ seller.phone }}<br>
+                            <i class="bi bi-geo-alt"></i> {{ seller.address|truncatewords:10 }}
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'shop:seller_detail' seller.id %}" class="btn btn-primary btn-sm">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <h4>No Sellers Yet</h4>
+            <p>We don't have any approved sellers at the moment. Check back later!</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

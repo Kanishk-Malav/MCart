@@ -1,0 +1,104 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %}{{ post.title }} - MCart Blog{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Post Content -->
+            <article class="mb-5">
+                {% if post.featured_image %}
+                <img src="{{ post.featured_image.url }}" class="img-fluid rounded mb-4" alt="{{ post.title }}">
+                {% endif %}
+                
+                <h1 class="mb-3">{{ post.title }}</h1>
+                
+                <div class="mb-4">
+                    <small class="text-muted">
+                        By <strong>{{ post.author.get_full_name|default:post.author.username }}</strong> • 
+                        {{ post.created_at|date:"F d, Y" }} • 
+                        {{ post.views }} views
+                        {% if post.category %}
+                        • <a href="{% url 'blog:category_posts' post.category.slug %}">{{ post.category.name }}</a>
+                        {% endif %}
+                    </small>
+                </div>
+                
+                <div class="post-content">
+                    {{ post.content|linebreaks }}
+                </div>
+            </article>
+
+            <!-- Comments Section -->
+            <div class="comments-section">
+                <h4>Comments ({{ comments.count }})</h4>
+                
+                {% if user.is_authenticated %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h6>Leave a Comment</h6>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <textarea name="content" class="form-control" rows="4" placeholder="Write your comment here..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Post Comment</button>
+                        </form>
+                    </div>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <a href="{% url 'shop:website_login' %}">Login</a> to leave a comment.
+                </div>
+                {% endif %}
+
+                <!-- Display Comments -->
+                {% for comment in comments %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="card-title">{{ comment.author.get_full_name|default:comment.author.username }}</h6>
+                            <small class="text-muted">{{ comment.created_at|date:"M d, Y H:i" }}</small>
+                        </div>
+                        <p class="card-text">{{ comment.content|linebreaks }}</p>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-muted">No comments yet. Be the first to comment!</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-md-4">
+            <!-- Related Posts -->
+            {% if related_posts %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Related Posts</h5>
+                </div>
+                <div class="card-body">
+                    {% for related_post in related_posts %}
+                    <div class="mb-3">
+                        <h6><a href="{% url 'blog:post_detail' related_post.slug %}" class="text-decoration-none">{{ related_post.title }}</a></h6>
+                        <small class="text-muted">{{ related_post.created_at|date:"M d, Y" }}</small>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Back to Blog -->
+            <div class="card">
+                <div class="card-body text-center">
+                    <a href="{% url 'blog:index' %}" class="btn btn-primary">← Back to Blog</a>
+                    <a href="{% url 'shop:home' %}" class="btn btn-outline-secondary">Visit Store</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

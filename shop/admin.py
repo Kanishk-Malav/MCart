@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import (Category, Product, ProductImage, 
-                    ProductTag, ProductReview, Cart, CartItem)
+                    ProductTag, ProductReview, Cart, CartItem, Seller,
+                    Order, OrderItem, Wishlist, Address)
 from django.utils.html import format_html
 
 class ProductImageInline(admin.TabularInline):
@@ -104,3 +105,81 @@ class CartAdmin(admin.ModelAdmin):
 class CartItemAdmin(admin.ModelAdmin):
     list_display = ['cart', 'product', 'quantity', 'total_price']
     list_filter = ['cart__user']
+
+@admin.register(Seller)
+class SellerAdmin(admin.ModelAdmin):
+    list_display = ['store_name', 'user', 'phone', 'is_approved', 'user__date_joined']
+    list_filter = ['is_approved', 'user__date_joined']
+    search_fields = ['store_name', 'user__username', 'user__email', 'phone']
+    list_editable = ['is_approved']
+    readonly_fields = ['user']
+    
+    fieldsets = (
+        ('Store Information', {
+            'fields': ('user', 'store_name', 'store_description')
+        }),
+        ('Contact Details', {
+            'fields': ('address', 'phone')
+        }),
+        ('Status', {
+            'fields': ('is_approved',)
+        }),
+    )
+    
+    def user__date_joined(self, obj):
+        return obj.user.date_joined.strftime('%Y-%m-%d')
+    user__date_joined.short_description = 'Applied Date'
+    user__date_joined.admin_order_field = 'user__date_joined'
+
+# Order Management
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    extra = 0
+    readonly_fields = ('product', 'quantity', 'price', 'total_price')
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ['order_number', 'user', 'status', 'payment_status', 'total_amount', 'created_at']
+    list_filter = ['status', 'payment_status', 'created_at']
+    search_fields = ['order_number', 'user__username', 'user__email', 'shipping_name']
+    readonly_fields = ['order_number', 'created_at', 'updated_at']
+    inlines = [OrderItemInline]
+    list_editable = ['status', 'payment_status']
+    
+    fieldsets = (
+        ('Order Information', {
+            'fields': ('order_number', 'user', 'status', 'payment_status')
+        }),
+        ('Shipping Details', {
+            'fields': ('shipping_name', 'shipping_email', 'shipping_phone', 
+                      'shipping_address', 'shipping_city', 'shipping_state', 
+                      'shipping_postal_code', 'shipping_country')
+        }),
+        ('Order Totals', {
+            'fields': ('subtotal', 'shipping_cost', 'tax_amount', 'total_amount')
+        }),
+        ('Tracking', {
+            'fields': ('tracking_number', 'estimated_delivery')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at')
+        }),
+    )
+
+@admin.register(OrderItem)
+class OrderItemAdmin(admin.ModelAdmin):
+    list_display = ['order', 'product', 'quantity', 'price', 'total_price']
+    list_filter = ['order__status', 'order__created_at']
+    search_fields = ['order__order_number', 'product__name']
+
+@admin.register(Wishlist)
+class WishlistAdmin(admin.ModelAdmin):
+    list_display = ['user', 'product', 'created_at']
+    list_filter = ['created_at']
+    search_fields = ['user__username', 'product__name']
+
+@admin.register(Address)
+class AddressAdmin(admin.ModelAdmin):
+    list_display = ['user', 'name', 'type', 'city', 'state', 'is_default']
+    list_filter = ['type', 'is_default', 'state']
+    search_fields = ['user__username', 'name', 'city']

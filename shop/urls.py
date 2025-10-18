@@ -5,7 +5,7 @@ from .views import (
     LoginView, 
     UserProfileView,
     product_list,
-    product_detail
+    product_detail,
 )
 
 app_name = 'shop'
@@ -37,4 +37,29 @@ urlpatterns = [
     # Website Authentication
     path('login/', views.website_login, name='website_login'),
     path('logout/', views.website_logout, name='website_logout'),
+
+    # Checkout and Orders
+    path('checkout/', views.checkout, name='checkout'),
+    path('order/<str:order_number>/', views.order_detail, name='order_detail'),
+    path('order/<str:order_number>/confirmation/', views.order_confirmation, name='order_confirmation'),
+    path('orders/', views.order_list, name='order_list'),
+    
+    # Wishlist
+    path('wishlist/', views.wishlist, name='wishlist'),
+    path('wishlist/add/<int:product_id>/', views.add_to_wishlist, name='add_to_wishlist'),
+    path('wishlist/remove/<int:product_id>/', views.remove_from_wishlist, name='remove_from_wishlist'),
+    
+    # User Profile
+    path('profile/', views.user_profile, name='user_profile'),
+    path('profile/add-address/', views.add_address, name='add_address'),
+    
+    # Advanced Search
+    path('search/advanced/', views.advanced_search, name='advanced_search'),
+    
+    # Seller
+    path('become-seller/', views.become_seller, name='become_seller'),
+    path('seller-success/', views.seller_success, name='seller_success'),
+    path('sellers/', views.seller_list, name='seller_list'),
+    path('seller/<int:seller_id>/', views.seller_detail, name='seller_detail'),
+    path('seller-dashboard/', views.seller_dashboard, name='seller_dashboard'),
 ]

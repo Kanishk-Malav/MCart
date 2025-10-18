@@ -33,15 +33,15 @@
                 <tr>
                     <td>
                         <div class="d-flex align-items-center">
-                            <img src="{{ MEDIA_URL }}{{ item.product.image }}" alt="{{ item.product.name }}" 
+                            <img src="{{ item.product.main_image.url }}" alt="{{ item.product.name }}" 
                                  class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;">
                             <div class="ms-3">
                                 <h6>{{ item.product.name }}</h6>
-                                <small class="text-muted">{{ item.product.category }}</small>
+                                <small class="text-muted">{{ item.product.category.name }}</small>
                             </div>
                         </div>
                     </td>
-                    <td>${{ item.product.price }}</td>
+                    <td>${{ item.product.current_price }}</td>
                     <td>
                         <form method="post" action="{% url 'shop:update_cart' item.id %}">
                             {% csrf_token %}
@@ -71,14 +71,22 @@
             <a href="{% url 'shop:product_list' %}" class="btn btn-outline-secondary">
                 <i class="bi bi-arrow-left"></i> Continue Shopping
             </a>
-            <a href="{% url 'shop:checkout' %}" class="btn btn-primary">
-                Proceed to Checkout <i class="bi bi-arrow-right"></i>
-            </a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'shop:checkout' %}" class="btn btn-primary">
+                    Proceed to Checkout <i class="bi bi-arrow-right"></i>
+                </a>
+            {% else %}
+                <a href="{% url 'shop:website_login' %}?next={% url 'shop:checkout' %}" class="btn btn-primary">
+                    Login to Checkout <i class="bi bi-arrow-right"></i>
+                </a>
+            {% endif %}
         </div>
     </div>
     {% else %}
-    <div class="alert alert-info">
-        Your cart is empty. <a href="{% url 'shop:product_list' %}">Start shopping</a>!
+    <div class="alert alert-info text-center">
+        <h4>Your Cart is Empty</h4>
+        <p>Add some products to your cart to proceed with checkout.</p>
+        <a href="{% url 'shop:product_list' %}" class="btn btn-primary">Start Shopping</a>
     </div>
     {% endif %}
 </div>

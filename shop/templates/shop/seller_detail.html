@@ -1,0 +1,54 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %}{{ seller.store_name }} - MCart{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2>{{ seller.store_name }}</h2>
+                    <span class="badge bg-success">Approved Seller</span>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Store Information</h5>
+                            {% if seller.store_description %}
+                                <p>{{ seller.store_description }}</p>
+                            {% else %}
+                                <p class="text-muted">No description provided.</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Contact Details</h5>
+                            <p>
+                                <i class="bi bi-person"></i> <strong>Owner:</strong> {{ seller.user.get_full_name|default:seller.user.username }}<br>
+                                <i class="bi bi-envelope"></i> <strong>Email:</strong> {{ seller.user.email }}<br>
+                                <i class="bi bi-telephone"></i> <strong>Phone:</strong> {{ seller.phone }}<br>
+                                <i class="bi bi-geo-alt"></i> <strong>Address:</strong> {{ seller.address }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'shop:seller_list' %}" class="btn btn-secondary btn-block mb-2">
+                        <i class="bi bi-arrow-left"></i> Back to Sellers
+                    </a>
+                    <a href="{% url 'shop:home' %}" class="btn btn-primary btn-block">
+                        <i class="bi bi-house"></i> Browse Products
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

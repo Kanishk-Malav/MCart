@@ -1,8 +1,11 @@
 # serializers.py
 from rest_framework import serializers
 from django.contrib.auth.models import User
+import rest_framework
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
+from rest_framework import serializers
+from .models import Seller
 
 class UserSerializer(serializers.ModelSerializer):
     # Email field with unique validation
@@ -40,3 +43,11 @@ class UserSerializer(serializers.ModelSerializer):
             last_name=validated_data['last_name']
         )
         return user
+
+        
+# Seller serializer
+class SellerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Seller
+        fields = '__all__'
+        read_only_fields = ['user', 'is_approved']

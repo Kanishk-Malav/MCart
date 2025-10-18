@@ -291,4 +291,34 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-**MCart** - Built with ❤️ using Django
+## 🌟 Star this Repository
+
+If you find MCart useful, please give it a ⭐ on GitHub! It helps others discover this project.
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📞 Support & Community
+
+- 🐛 **Issues**: [GitHub Issues](https://github.com/Kanishk-Malav/MCart/issues)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/Kanishk-Malav/MCart/discussions)
+- 📧 **Email**: kanishkmalav@gmail.com
+- 🌐 **Website**: [MCart Demo](https://mcart-demo.herokuapp.com) *(coming soon)*
+
+## 📊 Project Stats
+
+![GitHub stars](https://img.shields.io/github/stars/Kanishk-Malav/MCart?style=social)
+![GitHub forks](https://img.shields.io/github/forks/Kanishk-Malav/MCart?style=social)
+![GitHub issues](https://img.shields.io/github/issues/Kanishk-Malav/MCart)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/Kanishk-Malav/MCart)
+
+---
+
+**MCart** - Built with ❤️ using Django by [Kanishk Malav](https://github.com/Kanishk-Malav)

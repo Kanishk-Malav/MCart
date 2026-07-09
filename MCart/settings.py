@@ -1,12 +1,13 @@
 import os
 from pathlib import Path
 from datetime import timedelta
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 PROJECT_DIR = os.path.abspath(os.path.dirname(__file__))
 
-SECRET_KEY = 'django-insecure--qrf-)hhku36pl*qx_g2^7z6uyq)&y$eck_#2z+gh)j@u=bon('
+SECRET_KEY = config("SECRET_KEY")
 DEBUG = True
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'testserver']
 

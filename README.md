@@ -309,7 +309,7 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 
 - 🐛 **Issues**: [GitHub Issues](https://github.com/Kanishk-Malav/MCart/issues)
 - 💬 **Discussions**: [GitHub Discussions](https://github.com/Kanishk-Malav/MCart/discussions)
-- 📧 **Email**: kanishkmalav@gmail.com
+- 📧 **Email**: malavkanishq2@gmail.com
 - 🌐 **Website**: [MCart Demo](https://mcart-demo.herokuapp.com) *(coming soon)*
 
 ## 📊 Project Stats

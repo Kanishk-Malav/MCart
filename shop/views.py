@@ -23,8 +23,10 @@ from django.contrib.auth import logout as django_logout
 from rest_framework import generics, permissions
 from .models import Seller
 from .serializers import SellerSerializer
-from .forms import SellerForm
-from django.contrib.auth.decorators import login_required
+from .forms import SellerForm, ProductForm
+from .decorators import seller_required
+from django.core.paginator import Paginator
+
 
 def website_login(request):
     if request.method == 'POST':
@@ -347,11 +349,11 @@ def become_seller(request):
     else:
         form = SellerForm()
     
-    return render(request, 'shop/become_seller.html', {'form': form})
+    return render(request, 'shop/seller/become_seller.html', {'form': form})
 
 @login_required
 def seller_success(request):
-    return render(request, 'shop/seller_success.html')
+    return render(request, 'shop/seller/seller_success.html')
 
 
 # Seller Display Views
@@ -361,7 +363,7 @@ def seller_list(request):
     context = {
         'sellers': sellers
     }
-    return render(request, 'shop/seller_list.html', context)
+    return render(request, 'shop/seller/seller_list.html', context)
 
 def seller_detail(request, seller_id):
     """Display individual seller details"""
@@ -369,21 +371,157 @@ def seller_detail(request, seller_id):
     context = {
         'seller': seller
     }
-    return render(request, 'shop/seller_detail.html', context)
+    return render(request, 'shop/seller/seller_detail.html', context)
 
 @login_required
+@seller_required
 def seller_dashboard(request):
     """Dashboard for sellers to manage their profile"""
-    try:
-        seller = request.user.seller
-    except Seller.DoesNotExist:
-        messages.error(request, "You are not registered as a seller.")
-        return redirect('shop:become_seller')
-    
+    seller = request.user.seller 
     context = {
         'seller': seller
     }
-    return render(request, 'shop/seller_dashboard.html', context)
+    return render(request, 'shop/seller/seller_dashboard.html', context)
+
+@login_required
+@seller_required
+def seller_add_product(request):
+
+    if request.method == "POST":
+
+        form = ProductForm(
+            request.POST,
+            request.FILES
+        )
+
+        if form.is_valid():
+            product = form.save(commit=False)
+
+            # Very Important
+            product.seller = request.user.seller
+            product.save()
+            form.save_m2m()
+
+            messages.success(
+                request,
+                "Product added successfully."
+            )
+            return redirect("shop:seller_products")
+        
+    else:
+        form = ProductForm()
+    return render(
+        request,
+        "shop/seller/add_product.html",
+        {
+            "form": form
+        }
+    )
+
+@login_required
+@seller_required
+def seller_products(request):
+
+    search = request.GET.get("search", "")
+
+    products = Product.objects.filter(
+        seller=request.user.seller
+    ).select_related(
+        "category"
+    ).prefetch_related(
+        "images"
+    )
+
+    if search:
+        products = products.filter(
+            models.Q(name__icontains=search) |
+            models.Q(sku__icontains=search)
+        )
+
+    paginator = Paginator(
+        products.order_by("-created_at"),
+        10
+    )
+
+    page = request.GET.get("page")
+
+    products = paginator.get_page(page)
+
+    context = {
+        "products": products,
+        "search": search,
+    }
+
+    return render(
+        request,
+        "shop/seller/product_list.html",
+        context
+    )
+
+@login_required
+@seller_required
+def seller_edit_product(request, pk):
+
+    product = get_object_or_404(
+        Product,
+        pk=pk,
+        seller=request.user.seller
+    )
+
+    if request.method == "POST":
+
+        form = ProductForm(
+            request.POST,
+            request.FILES,
+            instance=product
+        )
+
+        if form.is_valid():
+
+            form.save()
+
+            messages.success(
+                request,
+                "Product updated successfully."
+            )
+
+            return redirect("shop:seller_products")
+
+    else:
+
+        form = ProductForm(instance=product)
+
+    return render(
+        request,
+        "shop/seller/edit_product.html",
+        {
+            "form": form,
+            "product": product
+        }
+    )
+
+@login_required
+@seller_required
+def seller_delete_product(request, pk):
+
+    product = get_object_or_404(
+        Product,
+        pk=pk,
+        seller=request.user.seller
+    )
+
+    if request.method == "POST":
+
+        product.delete()
+
+        messages.success(
+            request,
+            "Product deleted successfully."
+        )
+
+        return redirect("shop:seller_products")
+
+    return redirect("shop:seller_products")
 
 # Checkout and Order Views
 @login_required

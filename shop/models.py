@@ -55,6 +55,9 @@ class Product(models.Model):
     sku = models.CharField(max_length=50, unique=True, blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, 
                                related_name='products', null=True, blank=True)
+    seller = models.ForeignKey(
+        'Seller', on_delete=models.CASCADE, related_name='products', null=True, blank=True
+    )
     description = models.TextField()
     short_description = models.TextField(max_length=300, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)

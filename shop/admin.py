@@ -112,7 +112,7 @@ class SellerAdmin(admin.ModelAdmin):
     list_filter = ['is_approved', 'user__date_joined']
     search_fields = ['store_name', 'user__username', 'user__email', 'phone']
     list_editable = ['is_approved']
-    readonly_fields = ['user']
+    # readonly_fields = ['user']
     
     fieldsets = (
         ('Store Information', {

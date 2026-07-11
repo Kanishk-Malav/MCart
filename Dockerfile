@@ -28,7 +28,7 @@ RUN chmod +x start.sh
 RUN mkdir -p logs
 
 # Collect static files
-RUN python manage.py collectstatic --noinput --settings=MCart.settings
+# RUN python manage.py collectstatic --noinput --settings=MCart.settings
 
 # Expose port
 EXPOSE 8000

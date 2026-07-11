@@ -422,10 +422,15 @@ def seller_add_product(request):
 
     if request.method == "POST":
 
+        
+
         form = ProductForm(
             request.POST,
             request.FILES
         )
+
+        if not form.is_valid():
+            print(form.errors)
 
         if form.is_valid():
             product = form.save(commit=False)
@@ -434,7 +439,7 @@ def seller_add_product(request):
             product.seller = request.user.seller
             product.save()
             form.save_m2m()
-
+            print("IMAGE NAME =", product.main_image.name)
             messages.success(
                 request,
                 "Product added successfully."

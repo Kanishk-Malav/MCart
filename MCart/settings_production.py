@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
 from datetime import timedelta
+import dj_database_url
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -12,12 +14,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'your-production-secret-key-here')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = [
-    'your-domain.com',
-    'www.your-domain.com',
-    'localhost',
-    '127.0.0.1',
-]
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -66,14 +63,11 @@ WSGI_APPLICATION = 'MCart.wsgi.application'
 
 # Database - Use PostgreSQL for production
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME', 'mcart_production'),
-        'USER': os.environ.get('DB_USER', 'mcart_user'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', 'your-db-password'),
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
-        'PORT': os.environ.get('DB_PORT', '5432'),
-    }
+    "default": dj_database_url.config(
+        default=os.environ.get("DATABASE_URL"),
+        conn_max_age=600,
+        ssl_require=True,
+    )
 }
 
 # Password validation

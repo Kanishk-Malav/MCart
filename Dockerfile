@@ -22,14 +22,16 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy project
 COPY . /app/
 
+RUN chmod +x start.sh
+
 # Create logs directory
 RUN mkdir -p logs
 
 # Collect static files
-RUN python manage.py collectstatic --noinput --settings=MCart.settings_production
+RUN python manage.py collectstatic --noinput --settings=MCart.settings
 
 # Expose port
 EXPOSE 8000
 
 # Run the application
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "MCart.wsgi:application"]
+CMD ["./start.sh"]

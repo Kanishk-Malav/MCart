@@ -2,24 +2,24 @@ import os
 from pathlib import Path
 from datetime import timedelta
 from decouple import config
-<<<<<<< HEAD
-=======
+# <<<<<<< HEAD
+# =======
 import dj_database_url
->>>>>>> 35e0bdc (Changes in settings.py, requirement.txt, basic.html)
+# >>>>>>> 35e0bdc (Changes in settings.py, requirement.txt, basic.html)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 PROJECT_DIR = os.path.abspath(os.path.dirname(__file__))
 
-<<<<<<< HEAD
+# <<<<<<< HEAD
 SECRET_KEY = config("SECRET_KEY")
 DEBUG = True
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'testserver']
-=======
+# =======
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=True, cast=bool)
 ALLOWED_HOSTS = ['*']
->>>>>>> 35e0bdc (Changes in settings.py, requirement.txt, basic.html)
+# >>>>>>> 35e0bdc (Changes in settings.py, requirement.txt, basic.html)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -134,9 +134,9 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL = 'MCart <noreply@mcart.com>'
 
-<<<<<<< HEAD
+# <<<<<<< HEAD
 DEFAULT_FROM_EMAIL = 'MCart <noreply@mcart.com>'
-=======
+# =======
 # Security Settings for Production
 
 # SECURE_BROWSER_XSS_FILTER = True
@@ -174,4 +174,4 @@ LOGGING = {
         },
     },
 }
->>>>>>> 35e0bdc (Changes in settings.py, requirement.txt, basic.html)
+# >>>>>>> 35e0bdc (Changes in settings.py, requirement.txt, basic.html)

@@ -376,12 +376,45 @@ def seller_detail(request, seller_id):
 @login_required
 @seller_required
 def seller_dashboard(request):
-    """Dashboard for sellers to manage their profile"""
-    seller = request.user.seller 
+
+    seller = request.user.seller
+
+    products = Product.objects.filter(
+        seller=seller
+    )
+
+    total_products = products.count()
+
+    published_products = products.filter(
+        status="published"
+    ).count()
+
+    draft_products = products.filter(
+        status="draft"
+    ).count()
+
+    out_of_stock_products = products.filter(
+        stock=0
+    ).count()
+
+    recent_products = products.order_by(
+        "-created_at"
+    )[:5]
+
     context = {
-        'seller': seller
+        "seller": seller,
+        "total_products": total_products,
+        "published_products": published_products,
+        "draft_products": draft_products,
+        "out_of_stock_products": out_of_stock_products,
+        "recent_products": recent_products,
     }
-    return render(request, 'shop/seller/seller_dashboard.html', context)
+
+    return render(
+        request,
+        "shop/seller/seller_dashboard.html",
+        context
+    )
 
 @login_required
 @seller_required

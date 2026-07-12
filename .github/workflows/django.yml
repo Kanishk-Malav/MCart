@@ -117,7 +117,7 @@ jobs:
       - name: Verify Dockerfile
         if: hashFiles('Dockerfile') != ''
         run: |
-          docker build --no-cache -t MCart-ci .
+          docker build --no-cache -t mcart-ci .
 
       # ------------------------------------------------------------
       # Success Message

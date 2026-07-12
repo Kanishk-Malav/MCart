@@ -19,12 +19,13 @@ jobs:
       PYTHON_VERSION: "3.12"
 
       # Replace these with GitHub Secrets if your project requires them.
-      SECRET_KEY: django-ci-secret-key
+      SECRET_KEY:  ${{ secrets.SECRET_KEY }}
       DEBUG: False
-      ALLOWED_HOSTS: localhost,127.0.0.1
+      ALLOWED_HOSTS: https://mcart-9y2b.onrender.com
 
       # SQLite is ideal for CI unless PostgreSQL-specific features are required.
-      DATABASE_URL: sqlite:///db.sqlite3
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+# ==========================
 
     steps:
 

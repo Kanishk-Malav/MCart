@@ -38,11 +38,11 @@
                             <h5 class="card-title">{{ product.name }}</h5>
                             <p class="card-text">
                                 {% if product.is_on_sale %}
-                                <span class="text-danger"><strong>${{ product.current_price }}</strong></span>
-                                <span class="text-decoration-line-through text-muted">${{ product.price }}</span>
+                                <span class="text-danger"><strong>₹{{ product.current_price }}</strong></span>
+                                <span class="text-decoration-line-through text-muted">₹{{ product.price }}</span>
                                 <span class="badge bg-danger">{{ product.discount_percentage }}% OFF</span>
                                 {% else %}
-                                <strong>${{ product.price }}</strong>
+                                <strong>₹{{ product.price }}</strong>
                                 {% endif %}
                             </p>
                             <a href="{% url 'shop:product_detail' product.id product.slug %}" class="btn btn-primary btn-sm">

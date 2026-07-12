@@ -41,7 +41,7 @@
                             </div>
                         </div>
                     </td>
-                    <td>${{ item.product.current_price }}</td>
+                    <td>₹{{ item.product.current_price }}</td>
                     <td>
                         <form method="post" action="{% url 'shop:update_cart' item.id %}">
                             {% csrf_token %}
@@ -49,7 +49,7 @@
                                    class="form-control" style="width: 70px;">
                         </form>
                     </td>
-                    <td>${{ item.total_price }}</td>
+                    <td>₹{{ item.total_price }}</td>
                     <td>
                         <a href="{% url 'shop:remove_from_cart' item.id %}" class="btn btn-danger btn-sm">
                             <i class="bi bi-trash"></i>
@@ -61,7 +61,7 @@
             <tfoot>
                 <tr>
                     <td colspan="3" class="text-end"><strong>Total:</strong></td>
-                    <td><strong>${{ cart.total_price }}</strong></td>
+                    <td><strong>₹{{ cart.total_price }}</strong></td>
                     <td></td>
                 </tr>
             </tfoot>

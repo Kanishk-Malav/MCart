@@ -88,7 +88,7 @@ jobs:
           import django
           import importlib
 
-          s.environ.setdefault("DJANGO_SETTINGS_MODULE", "MCart.settings")
+          os.environ.setdefault("DJANGO_SETTINGS_MODULE", "MCart.settings")
           django.setup()
 
           modules = [

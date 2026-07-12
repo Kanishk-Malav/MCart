@@ -1,0 +1,124 @@
+name: Django CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  ci:
+
+    name: Build & Test
+
+    runs-on: ubuntu-latest
+
+    env:
+      PYTHON_VERSION: "3.12"
+
+      # Replace these with GitHub Secrets if your project requires them.
+      SECRET_KEY: django-ci-secret-key
+      DEBUG: False
+      ALLOWED_HOSTS: localhost,127.0.0.1
+
+      # SQLite is ideal for CI unless PostgreSQL-specific features are required.
+      DATABASE_URL: sqlite:///db.sqlite3
+
+    steps:
+
+      # ------------------------------------------------------------
+      # Checkout Repository
+      # ------------------------------------------------------------
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # ------------------------------------------------------------
+      # Setup Python
+      # ------------------------------------------------------------
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      # ------------------------------------------------------------
+      # Cache pip packages
+      # ------------------------------------------------------------
+      - name: Cache Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      # ------------------------------------------------------------
+      # Install Dependencies
+      # ------------------------------------------------------------
+      - name: Install Requirements
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # ------------------------------------------------------------
+      # Django System Check
+      # ------------------------------------------------------------
+      - name: Django System Check
+        run: |
+          python manage.py check
+
+      # ------------------------------------------------------------
+      # Run Database Migrations
+      # ------------------------------------------------------------
+      - name: Run Migrations
+        run: |
+          python manage.py migrate --noinput
+
+      # ------------------------------------------------------------
+      # Validate Project Imports
+      # ------------------------------------------------------------
+      - name: Validate Imports
+        run: |
+          python - <<'EOF'
+          import importlib
+
+          modules = [
+              "mcart.settings",
+              "mcart.urls",
+              "shop.models",
+              "shop.views",
+              "shop.urls",
+          ]
+
+          for module in modules:
+              importlib.import_module(module)
+
+          print("✅ All imports are valid.")
+          EOF
+
+      # ------------------------------------------------------------
+      # Run Django Tests
+      # ------------------------------------------------------------
+      - name: Run Tests
+        run: |
+          python manage.py test
+
+      # ------------------------------------------------------------
+      # Validate Dockerfile
+      # ------------------------------------------------------------
+      - name: Verify Dockerfile
+        if: hashFiles('Dockerfile') != ''
+        run: |
+          docker build --no-cache -t mcart-ci .
+
+      # ------------------------------------------------------------
+      # Success Message
+      # ------------------------------------------------------------
+      - name: Build Status
+        run: |
+          echo "======================================"
+          echo "✅ CI completed successfully"
+          echo "Repository is production-ready."
+          echo "======================================"

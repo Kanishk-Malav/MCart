@@ -87,8 +87,8 @@ jobs:
           import importlib
 
           modules = [
-              "mcart.settings",
-              "mcart.urls",
+              "MCart.settings",
+              "MCart.urls",
               "shop.models",
               "shop.views",
               "shop.urls",
@@ -113,7 +113,7 @@ jobs:
       - name: Verify Dockerfile
         if: hashFiles('Dockerfile') != ''
         run: |
-          docker build --no-cache -t mcart-ci .
+          docker build --no-cache -t MCart-ci .
 
       # ------------------------------------------------------------
       # Success Message

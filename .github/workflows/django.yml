@@ -84,10 +84,14 @@ jobs:
       - name: Validate Imports
         run: |
           python - <<'EOF'
+          import os
+          import django
           import importlib
 
+          s.environ.setdefault("DJANGO_SETTINGS_MODULE", "MCart.settings")
+          django.setup()
+
           modules = [
-              "MCart.settings",
               "MCart.urls",
               "shop.models",
               "shop.views",

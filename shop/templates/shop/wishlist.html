@@ -1,47 +1,72 @@
-{% extends 'shop/basic.html' %}
+{% extends "shop/basic.html" %}
+{% load static %}
 
-{% block title %}My Wishlist - MCart{% endblock %}
+{% block title %}My Wishlist | MCart{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{% static 'css/pages/product.css' %}">{% endblock %}
 
 {% block content %}
-<div class="container my-4">
-    <h2>My Wishlist</h2>
-    
-    {% if wishlist_items %}
-        <div class="row">
-            {% for item in wishlist_items %}
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <img src="{{ item.product.main_image.url }}" class="card-img-top" alt="{{ item.product.name }}" style="height: 200px; object-fit: contain;">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ item.product.name }}</h5>
-                        <p class="card-text">
-                            {% if item.product.is_on_sale %}
-                            <span class="text-danger"><strong>₹{{ item.product.current_price }}</strong></span>
-                            <span class="text-decoration-line-through text-muted">₹{{ item.product.price }}</span>
-                            <span class="badge bg-danger">{{ item.product.discount_percentage }}% OFF</span>
-                            {% else %}
-                            <strong>₹{{ item.product.price }}</strong>
-                            {% endif %}
-                        </p>
-                        <small class="text-muted">Added on {{ item.created_at|date:"M d, Y" }}</small>
-                    </div>
-                    <div class="card-footer">
-                        <a href="{% url 'shop:product_detail' item.product.id item.product.slug %}" class="btn btn-primary btn-sm">View Product</a>
-                        <a href="{% url 'shop:add_to_cart' item.product.id %}" class="btn btn-outline-primary btn-sm">Add to Cart</a>
-                        <a href="{% url 'shop:remove_from_wishlist' item.product.id %}" class="btn btn-outline-danger btn-sm">
-                            <i class="bi bi-heart-fill"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
+<div class="page-header">
+  <div class="container">
+    <h1 class="page-header-title">My Wishlist</h1>
+    <p class="page-header-desc">Products you've saved for later.</p>
+  </div>
+</div>
+
+<div class="container py-5">
+  {% if wishlist_items %}
+  <div class="row g-4">
+    {% for item in wishlist_items %}
+    <div class="col-6 col-md-4 col-lg-3">
+      <div class="product-card">
+        <div class="product-image">
+          <a href="{% url 'shop:product_detail' item.product.id item.product.slug %}">
+            {% if item.product.main_image %}
+              <img src="{{ item.product.main_image.url }}" alt="{{ item.product.name }}" loading="lazy">
+            {% endif %}
+          </a>
+          {% if item.product.discount_percentage %}
+            <span class="discount-badge">-{{ item.product.discount_percentage }}%</span>
+          {% endif %}
+          <div class="product-overlay">
+            <a href="{% url 'shop:add_to_cart' item.product.id %}" class="btn">
+              <i class="bi bi-bag-plus"></i> Add to Cart
+            </a>
+            <a href="{% url 'shop:remove_from_wishlist' item.product.id %}" class="btn" style="flex:0;padding:8px 10px" title="Remove">
+              <i class="bi bi-heart-fill" style="color:var(--color-danger)"></i>
+            </a>
+          </div>
         </div>
-    {% else %}
-        <div class="alert alert-info text-center">
-            <h4>Your Wishlist is Empty</h4>
-            <p>Save items you love to your wishlist and shop them later.</p>
-            <a href="{% url 'shop:product_list' %}" class="btn btn-primary">Browse Products</a>
+        <div class="product-content">
+          <span class="product-category">{{ item.product.category.name }}</span>
+          <h5 class="product-title">
+            <a href="{% url 'shop:product_detail' item.product.id item.product.slug %}">{{ item.product.name }}</a>
+          </h5>
+          <div class="product-price">
+            <span class="current-price">₹{{ item.product.discount_price|default:item.product.price }}</span>
+            {% if item.product.discount_price %}
+              <span class="old-price">₹{{ item.product.price }}</span>
+            {% endif %}
+          </div>
+          <div class="d-flex gap-2">
+            <a href="{% url 'shop:add_to_cart' item.product.id %}" class="btn btn-primary" style="flex:1;font-size:var(--text-xs)">
+              <i class="bi bi-bag-plus"></i> Cart
+            </a>
+            <a href="{% url 'shop:remove_from_wishlist' item.product.id %}" class="btn btn-secondary" style="padding:10px 12px" title="Remove from wishlist">
+              <i class="bi bi-trash3" style="font-size:.85rem"></i>
+            </a>
+          </div>
         </div>
-    {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <i class="bi bi-heart empty-state-icon"></i>
+    <h4 class="empty-state-title">Your wishlist is empty</h4>
+    <p class="empty-state-desc">Save products you love and find them here later.</p>
+    <a href="{% url 'shop:product_list' %}" class="btn btn-primary btn-lg">Browse Products</a>
+  </div>
+  {% endif %}
 </div>
 {% endblock %}

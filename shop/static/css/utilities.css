@@ -1,186 +1,42 @@
 /* ==========================================
-   SPACING
+   UTILITIES
 ========================================== */
 
-.mt-section{
-    margin-top:100px;
-}
+/* Text utilities */
+.text-primary-color  { color: var(--color-text-primary)   !important; }
+.text-secondary-color{ color: var(--color-text-secondary) !important; }
+.text-muted-color    { color: var(--color-text-muted)     !important; }
 
-.mb-section{
-    margin-bottom:100px;
-}
+/* Font weight */
+.fw-500 { font-weight: 500; }
+.fw-600 { font-weight: 600; }
+.fw-700 { font-weight: 700; }
+.fw-800 { font-weight: 800; }
 
-.py-section{
-    padding:100px 0;
-}
+/* Letter spacing */
+.tracking-tight    { letter-spacing: -0.03em; }
+.tracking-wide     { letter-spacing: 0.05em; }
+.tracking-wider    { letter-spacing: 0.08em; }
 
-.py-sm{
-    padding:60px 0;
-}
+/* Background */
+.bg-surface   { background: var(--color-surface)   !important; }
+.bg-surface-2 { background: var(--color-surface-2) !important; }
 
-.py-lg{
-    padding:140px 0;
-}
+/* Border */
+.border-light { border-color: var(--color-border-light) !important; }
 
+/* Radius */
+.rounded-xl  { border-radius: var(--radius-xl)  !important; }
+.rounded-2xl { border-radius: var(--radius-2xl) !important; }
+.rounded-full{ border-radius: var(--radius-full)!important; }
 
-/* ==========================================
-   BACKGROUND
-========================================== */
+/* Section spacing */
+.section-gap { padding: var(--space-20) 0; }
+.section-gap-sm { padding: var(--space-12) 0; }
 
-.bg-primary{
-    background:var(--primary) !important;
-}
-
-.bg-surface{
-    background:var(--surface) !important;
-}
-
-.bg-white{
-    background:#fff !important;
-}
-
-
-/* ==========================================
-   TEXT
-========================================== */
-
-.text-primary{
-    color:var(--primary) !important;
-}
-
-.text-secondary{
-    color:var(--secondary) !important;
-}
-
-.text-muted-custom{
-    color:#8A8A8A !important;
-}
-
-.text-white{
-    color:#fff !important;
-}
-
-
-/* ==========================================
-   BORDER RADIUS
-========================================== */
-
-.radius-sm{
-    border-radius:12px;
-}
-
-.radius-md{
-    border-radius:18px;
-}
-
-.radius-lg{
-    border-radius:24px;
-}
-
-.radius-xl{
-    border-radius:32px;
-}
-
-.rounded-full{
-    border-radius:999px;
-}
-
-
-/* ==========================================
-   SHADOW
-========================================== */
-
-.shadow-soft{
-    box-shadow:var(--shadow);
-}
-
-.shadow-none{
-    box-shadow:none !important;
-}
-
-
-/* ==========================================
-   DISPLAY
-========================================== */
-
-.flex{
-    display:flex;
-}
-
-.inline-flex{
-    display:inline-flex;
-}
-
-.flex-center{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-
-.flex-between{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-}
-
-.flex-column{
-    display:flex;
-    flex-direction:column;
-}
-
-
-/* ==========================================
-   WIDTH
-========================================== */
-
-.w-fit{
-    width:fit-content;
-}
-
-.w-full{
-    width:100%;
-}
-
-
-/* ==========================================
-   CURSOR
-========================================== */
-
-.cursor-pointer{
-    cursor:pointer;
-}
-
-
-/* ==========================================
-   OVERFLOW
-========================================== */
-
-.overflow-hidden{
-    overflow:hidden;
-}
-
-
-/* ==========================================
-   TRANSITION
-========================================== */
-
-.transition{
-    transition:.3s ease;
-}
-
-
-/* ==========================================
-   HOVER
-========================================== */
-
-.hover-up:hover{
-    transform:translateY(-5px);
-}
-
-.hover-shadow:hover{
-    box-shadow:var(--shadow);
-}
-
-.hover-scale:hover{
-    transform:scale(1.03);
+/* Divider */
+.divider {
+    border: none;
+    border-top: 1px solid var(--color-border-light);
+    margin: var(--space-8) 0;
 }

@@ -1,60 +1,67 @@
-{% extends 'shop/basic.html' %}
+{% extends "shop/basic.html" %}
+{% load static %}
 
-{% block title %}My Orders - MCart{% endblock %}
+{% block title %}My Orders | MCart{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{% static 'css/pages/dashboard.css' %}">{% endblock %}
 
 {% block content %}
-<div class="container my-4">
-    <h2>My Orders</h2>
-    
-    {% if orders %}
-        {% for order in orders %}
-        <div class="card mb-3">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-8">
-                        <h5>Order #{{ order.order_number }}</h5>
-                        <p class="text-muted mb-1">Placed on {{ order.created_at|date:"F d, Y" }}</p>
-                        <p class="mb-0">{{ order.items.count }} item{{ order.items.count|pluralize }}</p>
-                    </div>
-                    <div class="col-md-4 text-end">
-                        <h5>₹{{ order.total_amount }}</h5>
-                        <span class="badge bg-{% if order.status == 'delivered' %}success{% elif order.status == 'cancelled' %}danger{% else %}primary{% endif %}">
-                            {{ order.get_status_display }}
-                        </span>
-                        <div class="mt-2">
-                            <a href="{% url 'shop:order_detail' order.order_number %}" class="btn btn-outline-primary btn-sm">View Details</a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Order Items Preview -->
-                <div class="row mt-3">
-                    {% for item in order.items.all|slice:":3" %}
-                    <div class="col-md-4">
-                        <div class="d-flex">
-                            <img src="{{ item.product.main_image.url }}" class="img-thumbnail me-2" style="width: 60px; height: 60px; object-fit: cover;">
-                            <div>
-                                <small class="fw-bold">{{ item.product.name|truncatechars:30 }}</small><br>
-                                <small class="text-muted">Qty: {{ item.quantity }}</small>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                    {% if order.items.count > 3 %}
-                    <div class="col-md-4">
-                        <small class="text-muted">+{{ order.items.count|add:"-3" }} more item{{ order.items.count|add:"-3"|pluralize }}</small>
-                    </div>
-                    {% endif %}
-                </div>
+<div class="page-header">
+  <div class="container">
+    <h1 class="page-header-title">My Orders</h1>
+    <p class="page-header-desc">Track and manage all your orders.</p>
+  </div>
+</div>
+
+<div class="container py-5">
+  {% if orders %}
+    <div class="d-flex flex-column gap-4">
+      {% for order in orders %}
+      <div class="table-card">
+        <div style="padding:20px 24px;border-bottom:1px solid var(--color-border-light)">
+          <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div>
+              <span style="font-size:var(--text-xs);color:var(--color-text-muted);text-transform:uppercase;letter-spacing:.07em">Order</span>
+              <h5 style="font-size:var(--text-base);font-weight:var(--weight-bold);margin:2px 0">#{{ order.order_number }}</h5>
+              <span style="font-size:var(--text-xs);color:var(--color-text-muted)">{{ order.created_at|date:"d F Y, g:i A" }}</span>
             </div>
+            <div class="d-flex align-items-center gap-3">
+              <span class="status-badge status-badge-{{ order.status }}">{{ order.get_status_display }}</span>
+              <span style="font-size:var(--text-xl);font-weight:var(--weight-extrabold)">₹{{ order.total_amount }}</span>
+              <a href="{% url 'shop:order_detail' order.order_number %}" class="btn btn-secondary btn-sm">View Details</a>
+            </div>
+          </div>
         </div>
-        {% endfor %}
-    {% else %}
-        <div class="alert alert-info text-center">
-            <h4>No Orders Yet</h4>
-            <p>You haven't placed any orders yet.</p>
-            <a href="{% url 'shop:product_list' %}" class="btn btn-primary">Start Shopping</a>
+
+        <!-- Items Preview -->
+        <div style="padding:16px 24px;display:flex;gap:12px;flex-wrap:wrap">
+          {% for item in order.items.all|slice:":4" %}
+          <div class="d-flex align-items-center gap-2">
+            {% if item.product.main_image %}
+              <img src="{{ item.product.main_image.url }}" alt="{{ item.product.name }}"
+                style="width:44px;height:44px;object-fit:cover;border-radius:var(--radius-md);border:1px solid var(--color-border)">
+            {% endif %}
+            <div>
+              <div style="font-size:var(--text-xs);font-weight:var(--weight-semibold)">{{ item.product.name|truncatechars:22 }}</div>
+              <div style="font-size:10px;color:var(--color-text-muted)">Qty: {{ item.quantity }}</div>
+            </div>
+          </div>
+          {% endfor %}
+          {% if order.items.count > 4 %}
+            <div class="d-flex align-items-center" style="font-size:var(--text-xs);color:var(--color-text-muted)">
+              +{{ order.items.count|add:"-4" }} more
+            </div>
+          {% endif %}
         </div>
-    {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <i class="bi bi-bag empty-state-icon"></i>
+      <h4 class="empty-state-title">No orders yet</h4>
+      <p class="empty-state-desc">When you place an order, it will appear here.</p>
+      <a href="{% url 'shop:product_list' %}" class="btn btn-primary btn-lg">Start Shopping</a>
+    </div>
+  {% endif %}
 </div>
 {% endblock %}

@@ -1,364 +1,160 @@
 {% extends "shop/basic.html" %}
+{% load static %}
 
-{% block title %}My Products{% endblock %}
+{% block title %}My Products | MCart Seller{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{% static 'css/pages/dashboard.css' %}">{% endblock %}
 
 {% block content %}
+<div class="container" style="padding:var(--space-8) 0 var(--space-16)">
+  <div class="dashboard-layout">
 
-<div class="container py-4">
+    <!-- Sidebar -->
+    <aside class="dashboard-sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-profile">
+          <div class="sidebar-avatar"><i class="bi bi-shop"></i></div>
+          <div class="sidebar-name">{{ user.seller.store_name }}</div>
+          <div class="sidebar-role">Seller</div>
+        </div>
+        <nav class="sidebar-nav">
+          <a href="{% url 'shop:seller_dashboard' %}"><i class="bi bi-speedometer2"></i> Dashboard</a>
+          <a href="{% url 'shop:seller_products' %}" class="active"><i class="bi bi-box-seam"></i> My Products</a>
+          <a href="{% url 'shop:seller_add_product' %}"><i class="bi bi-plus-circle"></i> Add Product</a>
+          <hr style="border-color:var(--color-border-light);margin:8px 0">
+          <a href="{% url 'shop:home' %}"><i class="bi bi-house"></i> Back to Store</a>
+        </nav>
+      </div>
+    </aside>
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-
-        <div>
-            <h2 class="fw-bold mb-1">My Products</h2>
-            <p class="text-muted mb-0">
-                Manage your products
-            </p>
+    <!-- Main -->
+    <main>
+      <div class="table-card">
+        <div class="table-card-header">
+          <h5>My Products</h5>
+          <a href="{% url 'shop:seller_add_product' %}" class="btn btn-primary btn-sm">
+            <i class="bi bi-plus"></i> Add Product
+          </a>
         </div>
 
-        <a href="{% url 'shop:seller_add_product' %}"
-           class="btn btn-success">
-
-            <i class="bi bi-plus-circle"></i>
-
-            Add Product
-
-        </a>
-
-    </div>
-
-    <div class="card shadow-sm">
-
-        <div class="card-body">
-
-            <form method="GET">
-
-                <div class="row mb-3">
-
-                    <div class="col-md-4">
-
-                        <input
-                                type="text"
-                                class="form-control"
-                                name="search"
-                                value="{{ search }}"
-                                placeholder="Search Product...">
-
-                    </div>
-
-                    <div class="col-md-2">
-
-                        <button class="btn btn-primary w-100">
-
-                            Search
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </form>
-
-            <div class="table-responsive">
-
-                <table class="table table-hover align-middle">
-
-                    <thead class="table-dark">
-
-                    <tr>
-
-                        <th>Image</th>
-
-                        <th>Name</th>
-
-                        <th>Category</th>
-
-                        <th>Cost Price</th>
-
-                        <th>Selling Price</th>
-
-                        <th>MRP</th>
-
-                        <th>Stock</th>
-
-                        <th>Status</th>
-
-                        <th>Created</th>
-
-                        <th>Actions</th>
-
-                    </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                    {% for product in products %}
-
-                    <tr>
-
-                        <td width="90">
-
-                            <img
-                                    src="{{ product.main_image.url }}"
-                                    class="rounded"
-                                    width="70"
-                                    height="70"
-                                    style="object-fit:cover;">
-
-                        </td>
-
-                        <td>
-
-                            <strong>
-
-                                {{ product.name }}
-
-                            </strong>
-
-                            <br>
-
-                            <small class="text-muted">
-
-                                SKU :
-                                {{ product.sku }}
-
-                            </small>
-
-                        </td>
-
-                        <td>
-
-                            {{ product.category }}
-
-                        </td>
-
-                        <td>
-
-                            ₹{{ product.cost_price }}
-
-                        </td>
-
-                        <td>
-                            {% if product.discount_price %}
-                                ₹{{ product.discount_price }}
-                            {% else %}
-                                ₹{{ product.price }}
-                            {% endif %}
-                        </td>
-
-                        <td>
-
-                            ₹{{ product.price }}
-
-                        </td>
-
-                        <td>
-
-                            {% if product.stock == 0 %}
-
-                                <span class="badge bg-danger">
-
-                                    Out
-
-                                </span>
-
-                            {% elif product.stock <= 5 %}
-
-                                <span class="badge bg-warning text-dark">
-
-                                    {{ product.stock }}
-
-                                </span>
-
-                            {% else %}
-
-                                <span class="badge bg-success">
-
-                                    {{ product.stock }}
-
-                                </span>
-
-                            {% endif %}
-
-                        </td>
-
-                        <td>
-
-                            {% if product.status == "published" %}
-
-                                <span class="badge bg-success">
-
-                                    Published
-
-                                </span>
-
-                            {% elif product.status == "draft" %}
-
-                                <span class="badge bg-warning text-dark">
-
-                                    Draft
-
-                                </span>
-
-                            {% else %}
-
-                                <span class="badge bg-danger">
-
-                                    Out of Stock
-
-                                </span>
-
-                            {% endif %}
-
-                        </td>
-
-                        <td>
-
-                            {{ product.created_at|date:"d M Y" }}
-
-                        </td>
-
-                        <td>
-
-                            <a href="{% url 'shop:product_detail' product.id product.slug %}"
-                               class="btn btn-sm btn-outline-primary">
-
-                                <i class="bi bi-eye"></i>
-
-                            </a>
-
-                            <a href="{% url 'shop:seller_edit_product' product.id %}"
-                               class="btn btn-sm btn-outline-warning">
-
-                                <i class="bi bi-pencil"></i>
-
-                            </a>
-
-                            <form
-                                method="POST"
-                                action="{% url 'shop:seller_delete_product' product.id %}"
-                                class="d-inline">
-
-                                {% csrf_token %}
-
-                                <button
-                                    type="submit"
-                                    class="btn btn-sm btn-outline-danger"
-                                    onclick="return confirm('Delete this product?')">
-
-                                    <i class="bi bi-trash"></i>
-
-                                </button>
-
-                            </form>
-
-                        </td>
-
-                    </tr>
-
-                    {% empty %}
-
-                    <tr>
-
-                        <td colspan="10">
-
-                            <div class="text-center py-5">
-
-                                <h5>
-
-                                    No Products Found
-
-                                </h5>
-
-                                <p class="text-muted">
-
-                                    Start by adding your first product.
-
-                                </p>
-
-                                <a href="{% url 'shop:seller_add_product' %}"
-                                   class="btn btn-success">
-
-                                    Add Product
-
-                                </a>
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-                    {% endfor %}
-
-                    </tbody>
-
-                </table>
-
+        <!-- Search -->
+        <div style="padding:16px 22px;border-bottom:1px solid var(--color-border-light)">
+          <form method="GET">
+            <div class="d-flex gap-3" style="max-width:420px">
+              <input type="text" name="search" class="form-control" value="{{ search }}" placeholder="Search by name or SKU...">
+              <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
+              {% if search %}<a href="{% url 'shop:seller_products' %}" class="btn btn-secondary">Clear</a>{% endif %}
             </div>
-
-            {% if products.has_other_pages %}
-
-            <nav>
-
-                <ul class="pagination justify-content-center">
-
-                    {% if products.has_previous %}
-
-                    <li class="page-item">
-
-                        <a class="page-link"
-                           href="?page={{ products.previous_page_number }}&search={{ search }}">
-
-                            Previous
-
-                        </a>
-
-                    </li>
-
-                    {% endif %}
-
-                    {% for i in products.paginator.page_range %}
-
-                    <li class="page-item {% if products.number == i %}active{% endif %}">
-
-                        <a class="page-link"
-                           href="?page={{ i }}&search={{ search }}">
-
-                            {{ i }}
-
-                        </a>
-
-                    </li>
-
-                    {% endfor %}
-
-                    {% if products.has_next %}
-
-                    <li class="page-item">
-
-                        <a class="page-link"
-                           href="?page={{ products.next_page_number }}&search={{ search }}">
-
-                            Next
-
-                        </a>
-
-                    </li>
-
-                    {% endif %}
-
-                </ul>
-
-            </nav>
-
-            {% endif %}
-
+          </form>
         </div>
 
-    </div>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Sell Price</th>
+                <th>MRP</th>
+                <th>Stock</th>
+                <th>Status</th>
+                <th>Added</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for product in products %}
+              <tr>
+                <td>
+                  <div class="d-flex align-items-center gap-3">
+                    {% if product.main_image %}
+                      <img src="{{ product.main_image.url }}" alt="{{ product.name }}"
+                        style="width:48px;height:48px;object-fit:cover;border-radius:var(--radius-md);flex-shrink:0">
+                    {% endif %}
+                    <div>
+                      <div style="font-weight:var(--weight-semibold);font-size:var(--text-sm)">{{ product.name }}</div>
+                      {% if product.sku %}<div style="font-size:var(--text-xs);color:var(--color-text-muted)">SKU: {{ product.sku }}</div>{% endif %}
+                    </div>
+                  </div>
+                </td>
+                <td>{{ product.category }}</td>
+                <td style="font-weight:var(--weight-semibold)">₹{% if product.discount_price %}{{ product.discount_price }}{% else %}{{ product.price }}{% endif %}</td>
+                <td style="color:var(--color-text-muted)">₹{{ product.price }}</td>
+                <td>
+                  {% if product.stock == 0 %}
+                    <span class="status-badge status-badge-cancelled">Out</span>
+                  {% elif product.stock <= 5 %}
+                    <span class="status-badge status-badge-pending">{{ product.stock }}</span>
+                  {% else %}
+                    <span class="status-badge status-badge-delivered">{{ product.stock }}</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if product.status == 'published' %}
+                    <span class="status-badge status-badge-delivered">Published</span>
+                  {% elif product.status == 'draft' %}
+                    <span class="status-badge status-badge-pending">Draft</span>
+                  {% else %}
+                    <span class="status-badge status-badge-cancelled">{{ product.get_status_display }}</span>
+                  {% endif %}
+                </td>
+                <td style="font-size:var(--text-xs)">{{ product.created_at|date:"d M Y" }}</td>
+                <td>
+                  <div class="d-flex gap-2">
+                    <a href="{% url 'shop:product_detail' product.id product.slug %}" class="btn btn-sm btn-secondary" title="View">
+                      <i class="bi bi-eye"></i>
+                    </a>
+                    <a href="{% url 'shop:seller_edit_product' product.id %}" class="btn btn-sm btn-secondary" title="Edit">
+                      <i class="bi bi-pencil"></i>
+                    </a>
+                    <form method="POST" action="{% url 'shop:seller_delete_product' product.id %}" class="d-inline"
+                          onsubmit="return confirm('Delete this product? This cannot be undone.')">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-sm" style="background:var(--color-danger-bg);color:var(--color-danger)" title="Delete">
+                        <i class="bi bi-trash3"></i>
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="8">
+                  <div class="empty-state" style="padding:var(--space-12) 0">
+                    <i class="bi bi-box-seam empty-state-icon"></i>
+                    <h5 class="empty-state-title">No products found</h5>
+                    <p class="empty-state-desc">{% if search %}No products match "{{ search }}"{% else %}Start adding products to your store.{% endif %}</p>
+                    <a href="{% url 'shop:seller_add_product' %}" class="btn btn-primary">Add Product</a>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
 
+        <!-- Pagination -->
+        {% if products.has_other_pages %}
+        <div style="padding:16px 22px">
+          <nav class="d-flex justify-content-center">
+            <ul class="pagination mb-0">
+              {% if products.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ products.previous_page_number }}&search={{ search }}">‹</a></li>
+              {% endif %}
+              {% for i in products.paginator.page_range %}
+                <li class="page-item {% if products.number == i %}active{% endif %}">
+                  <a class="page-link" href="?page={{ i }}&search={{ search }}">{{ i }}</a>
+                </li>
+              {% endfor %}
+              {% if products.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ products.next_page_number }}&search={{ search }}">›</a></li>
+              {% endif %}
+            </ul>
+          </nav>
+        </div>
+        {% endif %}
+
+      </div>
+    </main>
+  </div>
 </div>
-
 {% endblock %}

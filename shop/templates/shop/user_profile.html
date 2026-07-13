@@ -1,110 +1,156 @@
-{% extends 'shop/basic.html' %}
+{% extends "shop/basic.html" %}
+{% load static %}
 
-{% block title %}My Profile - MCart{% endblock %}
+{% block title %}My Profile | MCart{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{% static 'css/pages/dashboard.css' %}">{% endblock %}
 
 {% block content %}
-<div class="container my-4">
-    <h2>My Profile</h2>
-    
-    <div class="row">
-        <div class="col-md-4">
-            <!-- Profile Info -->
-            <div class="card mb-4">
-                <div class="card-body text-center">
-                    <i class="bi bi-person-circle" style="font-size: 4rem;"></i>
-                    <h5 class="mt-2">{{ user.get_full_name|default:user.username }}</h5>
-                    <p class="text-muted">{{ user.email }}</p>
-                    <p class="text-muted">Member since {{ user.date_joined|date:"F Y" }}</p>
-                </div>
-            </div>
+<div class="container" style="padding-top:var(--space-8);padding-bottom:var(--space-12)">
 
-            <!-- Quick Stats -->
-            <div class="card">
-                <div class="card-header">
-                    <h6>Quick Stats</h6>
-                </div>
-                <div class="card-body">
-                    <div class="row text-center">
-                        <div class="col-6">
-                            <h4>{{ user.orders.count }}</h4>
-                            <small class="text-muted">Orders</small>
-                        </div>
-                        <div class="col-6">
-                            <h4>{{ user.wishlist_set.count }}</h4>
-                            <small class="text-muted">Wishlist</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <div class="dashboard-layout">
+
+    <!-- ==========================================
+         SIDEBAR
+    ========================================== -->
+    <aside class="dashboard-sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-profile">
+          <div class="sidebar-avatar"><i class="bi bi-person"></i></div>
+          <div class="sidebar-name">{{ user.get_full_name|default:user.username }}</div>
+          <div class="sidebar-role">{{ user.email }}</div>
         </div>
+        <nav class="sidebar-nav">
+          <a href="{% url 'shop:user_profile' %}" class="active"><i class="bi bi-person"></i> Profile</a>
+          <a href="{% url 'shop:order_list' %}"><i class="bi bi-box-seam"></i> My Orders</a>
+          <a href="{% url 'shop:wishlist' %}"><i class="bi bi-heart"></i> Wishlist</a>
+          <a href="{% url 'shop:view_cart' %}"><i class="bi bi-bag"></i> Cart</a>
+          {% if is_seller %}
+            <hr style="border-color:var(--color-border-light);margin:8px 0">
+            <a href="{% url 'shop:seller_dashboard' %}"><i class="bi bi-shop"></i> Seller Dashboard</a>
+          {% endif %}
+          <hr style="border-color:var(--color-border-light);margin:8px 0">
+          <a href="{% url 'shop:website_logout' %}" style="color:var(--color-danger)"><i class="bi bi-box-arrow-right"></i> Logout</a>
+        </nav>
+      </div>
+    </aside>
 
-        <div class="col-md-8">
-            <!-- Addresses -->
-            <div class="card mb-4">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5>My Addresses</h5>
-                    <a href="{% url 'shop:add_address' %}" class="btn btn-primary btn-sm">Add New Address</a>
-                </div>
-                <div class="card-body">
-                    {% if addresses %}
-                        {% for address in addresses %}
-                        <div class="border rounded p-3 mb-3">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h6>{{ address.name }} 
-                                        <span class="badge bg-secondary">{{ address.get_type_display }}</span>
-                                        {% if address.is_default %}
-                                        <span class="badge bg-primary">Default</span>
-                                        {% endif %}
-                                    </h6>
-                                    <p class="mb-1">{{ address.address_line_1 }}</p>
-                                    {% if address.address_line_2 %}
-                                    <p class="mb-1">{{ address.address_line_2 }}</p>
-                                    {% endif %}
-                                    <p class="mb-1">{{ address.city }}, {{ address.state }} {{ address.postal_code }}</p>
-                                    <p class="mb-0"><strong>Phone:</strong> {{ address.phone }}</p>
-                                </div>
-                                <div>
-                                    <button class="btn btn-outline-primary btn-sm">Edit</button>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    {% else %}
-                        <p class="text-muted">No addresses added yet.</p>
-                    {% endif %}
-                </div>
-            </div>
+    <!-- ==========================================
+         MAIN CONTENT
+    ========================================== -->
+    <main>
 
-            <!-- Recent Orders -->
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5>Recent Orders</h5>
-                    <a href="{% url 'shop:order_list' %}" class="btn btn-outline-primary btn-sm">View All</a>
-                </div>
-                <div class="card-body">
-                    {% if recent_orders %}
-                        {% for order in recent_orders %}
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div>
-                                <h6>Order #{{ order.order_number }}</h6>
-                                <small class="text-muted">{{ order.created_at|date:"M d, Y" }} • {{ order.items.count }} item{{ order.items.count|pluralize }}</small>
-                            </div>
-                            <div class="text-end">
-                                <p class="mb-0">₹{{ order.total_amount }}</p>
-                                <span class="badge bg-{% if order.status == 'delivered' %}success{% elif order.status == 'cancelled' %}danger{% else %}primary{% endif %}">
-                                    {{ order.get_status_display }}
-                                </span>
-                            </div>
-                        </div>
-                        {% if not forloop.last %}<hr>{% endif %}
-                        {% endfor %}
-                    {% else %}
-                        <p class="text-muted">No orders yet.</p>
-                    {% endif %}
-                </div>
-            </div>
+      <!-- Profile Card -->
+      <div class="table-card mb-5">
+        <div class="table-card-header">
+          <h5>Account Information</h5>
         </div>
-    </div>
+        <div style="padding:24px">
+          <div class="row g-4">
+            <div class="col-md-6">
+              <label class="form-label">Username</label>
+              <input type="text" class="form-control" value="{{ user.username }}" disabled>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" value="{{ user.email }}" disabled>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">First Name</label>
+              <input type="text" class="form-control" value="{{ user.first_name }}" disabled>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Last Name</label>
+              <input type="text" class="form-control" value="{{ user.last_name }}" disabled>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Member Since</label>
+              <input type="text" class="form-control" value="{{ user.date_joined|date:'F Y' }}" disabled>
+            </div>
+          </div>
+          <div class="mt-4">
+            <a href="{% url 'password_reset' %}" class="btn btn-secondary">
+              <i class="bi bi-key"></i> Change Password
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Saved Addresses -->
+      <div class="table-card mb-5">
+        <div class="table-card-header">
+          <h5>Saved Addresses</h5>
+          <a href="{% url 'shop:add_address' %}" class="btn btn-sm btn-primary"><i class="bi bi-plus"></i> Add New</a>
+        </div>
+        <div style="padding:20px">
+          {% if addresses %}
+            <div class="row g-3">
+              {% for address in addresses %}
+              <div class="col-md-6">
+                <div style="border:1.5px solid var(--color-border);border-radius:var(--radius-lg);padding:16px;position:relative">
+                  {% if address.is_default %}
+                    <span class="status-badge status-badge-confirmed" style="position:absolute;top:14px;right:14px">Default</span>
+                  {% endif %}
+                  <div style="font-weight:var(--weight-semibold);margin-bottom:6px">{{ address.name }}</div>
+                  <div style="font-size:var(--text-sm);color:var(--color-text-secondary)">
+                    {{ address.address_line_1 }}{% if address.address_line_2 %}, {{ address.address_line_2 }}{% endif %}<br>
+                    {{ address.city }}, {{ address.state }} {{ address.postal_code }}<br>
+                    <strong>Phone:</strong> {{ address.phone }}
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p class="text-muted">No addresses saved yet.</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Recent Orders -->
+      <div class="table-card">
+        <div class="table-card-header">
+          <h5>Recent Orders</h5>
+          <a href="{% url 'shop:order_list' %}" class="btn btn-sm btn-secondary">View All</a>
+        </div>
+        {% if recent_orders %}
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Order</th>
+              <th>Date</th>
+              <th>Items</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in recent_orders %}
+            <tr>
+              <td><span style="font-weight:var(--weight-semibold)">#{{ order.order_number }}</span></td>
+              <td>{{ order.created_at|date:"d M Y" }}</td>
+              <td>{{ order.items.count }} item{{ order.items.count|pluralize }}</td>
+              <td style="font-weight:var(--weight-semibold)">₹{{ order.total_amount }}</td>
+              <td>
+                <span class="status-badge status-badge-{{ order.status }}">{{ order.get_status_display }}</span>
+              </td>
+              <td>
+                <a href="{% url 'shop:order_detail' order.order_number %}" class="btn btn-sm btn-secondary">View</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <div style="padding:30px;text-align:center;color:var(--color-text-muted)">
+          <i class="bi bi-box-seam" style="font-size:2.5rem;display:block;margin-bottom:12px"></i>
+          No orders yet.
+          <a href="{% url 'shop:product_list' %}" class="d-block mt-3 btn btn-primary btn-sm">Start Shopping</a>
+        </div>
+        {% endif %}
+      </div>
+
+    </main>
+  </div>
 </div>
 {% endblock %}

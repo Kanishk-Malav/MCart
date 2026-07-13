@@ -1,66 +1,178 @@
-{% extends 'shop/basic.html' %}
+{% extends "shop/basic.html" %}
+{% load static %}
 
-{% block title %}{% if category %}{{ category.name }}{% else %}Products{% endif %} - MCart{% endblock %}
+{% block title %}{% if category %}{{ category.name }} — {% endif %}Products | MCart{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{% static 'css/pages/product.css' %}">{% endblock %}
 
 {% block content %}
-<div class="container my-4">
-    <div class="row">
-        <div class="col-md-3">
-            <div class="card mb-4">
-                <div class="card-header bg-primary text-white">
-                    Categories
-                </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item {% if not category %}active{% endif %}">
-                        <a href="{% url 'shop:product_list' %}" class="text-decoration-none">All Products</a>
-                    </li>
-                    {% for cat in categories %}
-                    <li class="list-group-item {% if category.slug == cat.slug %}active{% endif %}">
-                        <a href="{% url 'shop:product_list_by_category' cat.slug %}" class="text-decoration-none">
-                            {{ cat.name }}
-                        </a>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-        
-        <div class="col-md-9">
-            <h2>{% if category %}{{ category.name }}{% else %}All Products{% endif %}</h2>
-            <hr>
-            
-            <div class="row">
-                {% for product in products %}
-                <div class="col-md-4 mb-4">
-                    <div class="card product-card h-100">
-                        <img src="{{ product.main_image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: contain;">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ product.name }}</h5>
-                            <p class="card-text">
-                                {% if product.is_on_sale %}
-                                <span class="text-danger"><strong>₹{{ product.current_price }}</strong></span>
-                                <span class="text-decoration-line-through text-muted">₹{{ product.price }}</span>
-                                <span class="badge bg-danger">{{ product.discount_percentage }}% OFF</span>
-                                {% else %}
-                                <strong>₹{{ product.price }}</strong>
-                                {% endif %}
-                            </p>
-                            <a href="{% url 'shop:product_detail' product.id product.slug %}" class="btn btn-primary btn-sm">
-                                View Details
-                            </a>
-                            <a href="{% url 'shop:add_to_cart' product.id %}" class="btn btn-outline-primary btn-sm">
-                                <i class="bi bi-cart-plus"></i> Add to Cart
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                {% empty %}
-                <div class="col-12">
-                    <div class="alert alert-info">No products found in this category.</div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
+
+<!-- Page Header -->
+<div class="page-header">
+  <div class="container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-3">
+        <li class="breadcrumb-item"><a href="{% url 'shop:home' %}">Home</a></li>
+        {% if category %}
+          <li class="breadcrumb-item active">{{ category.name }}</li>
+        {% else %}
+          <li class="breadcrumb-item active">All Products</li>
+        {% endif %}
+      </ol>
+    </nav>
+    <h1 class="page-header-title">{% if category %}{{ category.name }}{% else %}All Products{% endif %}</h1>
+    <p class="page-header-desc">{% if category %}{{ category.description }}{% else %}Discover our full collection from trusted sellers.{% endif %}</p>
+  </div>
 </div>
+
+<div class="container pb-5">
+  <div class="row g-5">
+
+    <!-- ==========================================
+         SIDEBAR FILTERS
+    ========================================== -->
+    <div class="col-lg-3 d-none d-lg-block">
+      <div class="filter-panel">
+
+        <!-- Categories -->
+        <div class="filter-card mb-4">
+          <div class="card-header">Categories</div>
+          <div class="card-body">
+            <a href="{% url 'shop:product_list' %}" class="filter-option {% if not category %}fw-600{% endif %}">
+              <i class="bi bi-grid-3x3-gap"></i> All Products
+            </a>
+            {% for cat in categories %}
+            <a href="{% url 'shop:product_list_by_category' cat.slug %}"
+               class="filter-option {% if category.slug == cat.slug %}fw-600{% endif %}">
+              <i class="bi bi-tag"></i> {{ cat.name }}
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Search -->
+        <div class="filter-card">
+          <div class="card-header">Search Products</div>
+          <div class="card-body">
+            <form action="{% url 'shop:search' %}" method="GET">
+              <div class="input-group">
+                <input type="text" name="q" class="form-control" placeholder="Search...">
+                <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ==========================================
+         PRODUCTS GRID
+    ========================================== -->
+    <div class="col-lg-9">
+
+      <!-- Sort Bar -->
+      <div class="sort-bar">
+        <span class="result-count"><strong>{{ products|length }}</strong> products found</span>
+        <div class="d-flex align-items-center gap-3">
+          <!-- Mobile filter toggle -->
+          <button class="btn btn-sm btn-secondary d-lg-none" data-bs-toggle="offcanvas" data-bs-target="#filterDrawer">
+            <i class="bi bi-funnel"></i> Filters
+          </button>
+          <form action="" method="GET" id="sortForm">
+            <select class="sort-select" name="sort" onchange="document.getElementById('sortForm').submit()">
+              <option value="">Sort by: Default</option>
+              <option value="price_low">Price: Low to High</option>
+              <option value="price_high">Price: High to Low</option>
+              <option value="newest">Newest First</option>
+              <option value="rating">Top Rated</option>
+            </select>
+          </form>
+        </div>
+      </div>
+
+      <!-- Grid -->
+      <div class="row g-4">
+        {% for product in products %}
+        <div class="col-6 col-md-4">
+          <div class="product-card reveal">
+            <div class="product-image">
+              <a href="{% url 'shop:product_detail' product.id product.slug %}">
+                {% if product.main_image %}
+                  <img src="{{ product.main_image.url }}" alt="{{ product.name }}" loading="lazy">
+                {% else %}
+                  <div class="d-flex align-items-center justify-content-center h-100">
+                    <i class="bi bi-image" style="font-size:3rem;color:var(--color-border)"></i>
+                  </div>
+                {% endif %}
+              </a>
+              {% if product.discount_percentage %}
+                <span class="discount-badge">-{{ product.discount_percentage }}%</span>
+              {% endif %}
+              <div class="product-overlay">
+                <a href="{% url 'shop:add_to_cart' product.id %}" class="btn">
+                  <i class="bi bi-bag-plus"></i> Cart
+                </a>
+                {% if user.is_authenticated %}
+                <a href="{% url 'shop:add_to_wishlist' product.id %}" class="btn" style="flex:0;padding:8px 10px">
+                  <i class="bi bi-heart"></i>
+                </a>
+                {% endif %}
+              </div>
+            </div>
+            <div class="product-content">
+              <span class="product-category">{{ product.category.name }}</span>
+              <h5 class="product-title">
+                <a href="{% url 'shop:product_detail' product.id product.slug %}">{{ product.name }}</a>
+              </h5>
+              <div class="product-price">
+                <span class="current-price">₹{{ product.discount_price|default:product.price }}</span>
+                {% if product.discount_price %}<span class="old-price">₹{{ product.price }}</span>{% endif %}
+              </div>
+              <div class="product-actions">
+                <a href="{% url 'shop:product_detail' product.id product.slug %}" class="btn btn-primary">View</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+          <div class="empty-state">
+            <i class="bi bi-bag empty-state-icon"></i>
+            <h4 class="empty-state-title">No products found</h4>
+            <p class="empty-state-desc">Try a different category or check back later.</p>
+            <a href="{% url 'shop:product_list' %}" class="btn btn-primary">View All Products</a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Mobile Filter Drawer -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="filterDrawer">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">Filters</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body">
+    <strong class="d-block mb-3 text-muted" style="font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.07em">Categories</strong>
+    <a href="{% url 'shop:product_list' %}" class="filter-option">All Products</a>
+    {% for cat in categories %}
+    <a href="{% url 'shop:product_list_by_category' cat.slug %}" class="filter-option">{{ cat.name }}</a>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}
+
+{% block page_js %}
+<script>
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }});
+}, { threshold: 0.1 });
+reveals.forEach(el => observer.observe(el));
+</script>
 {% endblock %}

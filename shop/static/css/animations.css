@@ -1,248 +1,77 @@
 /* ==========================================
-   GLOBAL TRANSITIONS
+   ANIMATIONS
 ========================================== */
 
-*{
-    transition:
-        background-color .3s ease,
-        color .3s ease,
-        border-color .3s ease,
-        box-shadow .3s ease;
-}
-
-
-/* ==========================================
-   HOVER EFFECTS
-========================================== */
-
-.hover-lift{
-    transition:all .35s ease;
-}
-
-.hover-lift:hover{
-    transform:translateY(-8px);
-    box-shadow:var(--shadow);
-}
-
-.hover-scale{
-    transition:transform .35s ease;
-}
-
-.hover-scale:hover{
-    transform:scale(1.05);
-}
-
-.hover-zoom{
-    overflow:hidden;
-}
-
-.hover-zoom img{
-    transition:transform .5s ease;
-}
-
-.hover-zoom:hover img{
-    transform:scale(1.08);
-}
-
-
-/* ==========================================
-   FADE ANIMATIONS
-========================================== */
-
-.fade-in{
-    animation:fadeIn .8s ease forwards;
-}
-
-.fade-up{
-    animation:fadeUp .8s ease forwards;
-}
-
-.fade-down{
-    animation:fadeDown .8s ease forwards;
-}
-
-.fade-left{
-    animation:fadeLeft .8s ease forwards;
-}
-
-.fade-right{
-    animation:fadeRight .8s ease forwards;
-}
-
-
-/* ==========================================
-   KEYFRAMES
-========================================== */
-
-@keyframes fadeIn{
-
-    from{
-        opacity:0;
+/* Fade In Up */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
     }
-
-    to{
-        opacity:1;
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
-
 }
 
-@keyframes fadeUp{
+/* Fade In */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
 
-    from{
-        opacity:0;
-        transform:translateY(40px);
+/* Scale In */
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(.96);
     }
-
-    to{
-        opacity:1;
-        transform:translateY(0);
+    to {
+        opacity: 1;
+        transform: scale(1);
     }
-
 }
 
-@keyframes fadeDown{
-
-    from{
-        opacity:0;
-        transform:translateY(-40px);
+/* Slide Down */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
     }
-
-    to{
-        opacity:1;
-        transform:translateY(0);
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
-
 }
 
-@keyframes fadeLeft{
+/* Utility Classes */
+.animate-fade-in-up { animation: fadeInUp .5s ease forwards; }
+.animate-fade-in    { animation: fadeIn .4s ease forwards; }
+.animate-scale-in   { animation: scaleIn .35s ease forwards; }
 
-    from{
-        opacity:0;
-        transform:translateX(-40px);
-    }
+/* Stagger delays */
+.delay-100 { animation-delay: .1s; }
+.delay-200 { animation-delay: .2s; }
+.delay-300 { animation-delay: .3s; }
+.delay-400 { animation-delay: .4s; }
+.delay-500 { animation-delay: .5s; }
 
-    to{
-        opacity:1;
-        transform:translateX(0);
-    }
-
+/* Scroll reveal — starts hidden */
+.reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity .55s ease, transform .55s ease;
+}
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
 }
 
-@keyframes fadeRight{
-
-    from{
-        opacity:0;
-        transform:translateX(40px);
-    }
-
-    to{
-        opacity:1;
-        transform:translateX(0);
-    }
-
+/* Hover lift */
+.hover-lift {
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
 }
-
-
-/* ==========================================
-   BUTTON RIPPLE
-========================================== */
-
-.btn-modern{
-
-    position:relative;
-
-    overflow:hidden;
-
-}
-
-.btn-modern::after{
-
-    content:"";
-
-    position:absolute;
-
-    width:0;
-
-    height:0;
-
-    border-radius:50%;
-
-    background:rgba(255,255,255,.25);
-
-    top:50%;
-
-    left:50%;
-
-    transform:translate(-50%,-50%);
-
-    transition:.5s;
-
-}
-
-.btn-modern:active::after{
-
-    width:300px;
-
-    height:300px;
-
-}
-
-
-/* ==========================================
-   IMAGE LOADING
-========================================== */
-
-.img-loading{
-
-    background:#f3f3f3;
-
-    animation:pulse 1.5s infinite;
-
-}
-
-@keyframes pulse{
-
-    0%{
-        opacity:.6;
-    }
-
-    50%{
-        opacity:1;
-    }
-
-    100%{
-        opacity:.6;
-    }
-
-}
-
-
-/* ==========================================
-   SCROLL BAR
-========================================== */
-
-::-webkit-scrollbar{
-
-    width:8px;
-
-}
-
-::-webkit-scrollbar-track{
-
-    background:#f5f5f5;
-
-}
-
-::-webkit-scrollbar-thumb{
-
-    background:#bdbdbd;
-
-    border-radius:20px;
-
-}
-
-::-webkit-scrollbar-thumb:hover{
-
-    background:#888;
-
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
 }

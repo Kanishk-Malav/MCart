@@ -1,191 +1,282 @@
 {% extends "shop/basic.html" %}
-
 {% load static %}
 
-{% block title %}
-MCart | Home
-{% endblock %}
+{% block title %}MCart — Modern Marketplace{% endblock %}
 
 {% block page_css %}
-<link rel="stylesheet"
-      href="{% static 'css/home.css' %}">
+<link rel="stylesheet" href="{% static 'css/pages/home.css' %}">
 {% endblock %}
 
 {% block content %}
 
-<!-- ==========================================================
-    FEATURED PRODUCTS
-========================================================== -->
+<!-- ==========================================
+     HERO SECTION
+========================================== -->
+<section class="hero-section">
+  <div class="container">
+    <div class="row align-items-center gy-5">
 
-<section class="featured-products-section py-5">
-
-    <div class="container">
-
-        <div class="section-header d-flex justify-content-between align-items-center mb-5">
-
-            <div>
-
-                <span class="section-badge">
-
-                    Featured Collection
-
-                </span>
-
-                <h2 class="section-title">
-
-                    Featured Products
-
-                </h2>
-
-                <p class="section-description">
-
-                    Handpicked products from our trusted sellers.
-
-                </p>
-
-            </div>
-
-            <a
-
-                href="{% url 'shop:product_list' %}"
-
-                class="btn btn-outline-primary">
-
-                View All
-
+      <!-- Left: Text -->
+      <div class="col-lg-6">
+        <div class="animate-fade-in-up">
+          <div class="hero-eyebrow">
+            <span></span> New Arrivals This Week
+          </div>
+          <h1 class="hero-title">
+            Shop Smarter.<br>
+            Live <span class="highlight">Better</span>.
+          </h1>
+          <p class="hero-description">
+            Discover thousands of products from trusted sellers.
+            Premium quality, fast delivery, unbeatable prices.
+          </p>
+          <div class="hero-actions">
+            <a href="{% url 'shop:product_list' %}" class="btn btn-primary btn-lg">
+              <i class="bi bi-bag"></i> Shop Now
             </a>
-
-        </div>
-
-        <div class="row g-4">
-
-            {% for product in featured_products %}
-
-            <div class="col-6 col-md-4 col-lg-3">
-
-                <div class="product-card">
-
-                    <!-- Product Image -->
-
-                    <div class="product-image">
-
-                        <a href="{% url 'shop:product_detail' product.id product.slug %}">
-
-                            {% if product.main_image %}
-
-                            <img
-
-                                src="{{ product.main_image.url }}"
-
-                                alt="{{ product.name }}"
-
-                                class="img-fluid">
-
-                            {% else %}
-
-                            <img
-
-                                src="{% static 'shop/images/no-image.png' %}"
-
-                                alt="No Image"
-
-                                class="img-fluid">
-
-                            {% endif %}
-
-                        </a>
-
-                        {% if product.discount_percentage %}
-
-                        <span class="discount-badge">
-
-                            -{{ product.discount_percentage }}%
-
-                        </span>
-
-                        {% endif %}
-
-                    </div>
-
-                    <!-- Product Content -->
-
-                    <div class="product-content">
-
-                        <small class="product-category">
-
-                            {{ product.category.name }}
-
-                        </small>
-
-                        <h5 class="product-title">
-
-                            <a
-
-                                href="{% url 'shop:product_detail' product.id product.slug %}">
-
-                                {{ product.name }}
-
-                            </a>
-
-                        </h5>
-
-                        <div class="product-price">
-
-                            <span class="current-price">
-
-                                ₹{{ product.discount_price|default:product.price }}
-
-                            </span>
-
-                            {% if product.discount_price %}
-
-                            <span class="old-price">
-
-                                ₹{{ product.price }}
-
-                            </span>
-
-                            {% endif %}
-
-                        </div>
-
-                        <div class="product-actions">
-
-                            <a
-
-                                href="{% url 'shop:product_detail' product.id product.slug %}"
-
-                                class="btn btn-primary w-100">
-
-                                View Product
-
-                            </a>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
+            <a href="{% url 'shop:seller_list' %}" class="btn btn-secondary btn-lg">
+              Browse Sellers
+            </a>
+          </div>
+          <div class="hero-stats">
+            <div>
+              <div class="hero-stat-number">500+</div>
+              <div class="hero-stat-label">Products</div>
             </div>
-
-            {% empty %}
-
-            <div class="col-12">
-
-                <div class="alert alert-light text-center">
-
-                    Featured products are not available.
-
-                </div>
-
+            <div>
+              <div class="hero-stat-number">50+</div>
+              <div class="hero-stat-label">Sellers</div>
             </div>
-
-            {% endfor %}
-
+            <div>
+              <div class="hero-stat-number">10k+</div>
+              <div class="hero-stat-label">Happy Customers</div>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <!-- Right: Visual -->
+      <div class="col-lg-6">
+        <div class="hero-image-wrap animate-fade-in-up delay-200">
+          {% if featured_products %}
+            {% with featured_products.0 as hero_product %}
+              {% if hero_product.main_image %}
+                <img src="{{ hero_product.main_image.url }}" alt="{{ hero_product.name }}" class="hero-image-main">
+              {% else %}
+                <div class="hero-image-main d-flex align-items-center justify-content-center bg-surface">
+                  <i class="bi bi-bag" style="font-size:6rem;color:var(--color-border)"></i>
+                </div>
+              {% endif %}
+            {% endwith %}
+          {% else %}
+            <div class="hero-image-main d-flex align-items-center justify-content-center" style="background:var(--color-surface);min-height:400px;">
+              <i class="bi bi-shop" style="font-size:6rem;color:var(--color-border)"></i>
+            </div>
+          {% endif %}
+          <!-- Floating Card 1 -->
+          <div class="hero-floating-card card-1">
+            <div class="hero-floating-icon green"><i class="bi bi-truck"></i></div>
+            <div>
+              <div class="hero-floating-label">Free Delivery</div>
+              <div class="hero-floating-value">Orders above ₹999</div>
+            </div>
+          </div>
+          <!-- Floating Card 2 -->
+          <div class="hero-floating-card card-2">
+            <div class="hero-floating-icon blue"><i class="bi bi-shield-check"></i></div>
+            <div>
+              <div class="hero-floating-label">Secure Payment</div>
+              <div class="hero-floating-value">100% Protected</div>
+            </div>
+          </div>
+        </div>
+      </div>
 
     </div>
-
+  </div>
 </section>
+
+<!-- ==========================================
+     CATEGORIES SECTION
+========================================== -->
+{% if categories %}
+<section class="categories-section">
+  <div class="container">
+
+    <div class="d-flex justify-content-between align-items-end mb-5">
+      <div>
+        <span class="section-badge">Collections</span>
+        <h2 class="section-title mb-0">Shop by Category</h2>
+      </div>
+      <a href="{% url 'shop:product_list' %}" class="btn btn-outline-primary">View All</a>
+    </div>
+
+    <div class="row g-3">
+      {% for category in categories %}
+      <div class="col-6 col-md-4 col-lg-2">
+        <a href="{% url 'shop:product_list_by_category' category.slug %}" class="category-card-simple">
+          <div class="category-card-icon">
+            <i class="bi bi-grid"></i>
+          </div>
+          <span class="category-card-name">{{ category.name }}</span>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+{% endif %}
+
+<!-- ==========================================
+     FEATURED PRODUCTS SECTION
+========================================== -->
+<section class="featured-products-section">
+  <div class="container">
+
+    <div class="d-flex justify-content-between align-items-end mb-5">
+      <div>
+        <span class="section-badge">Featured Collection</span>
+        <h2 class="section-title mb-0">Featured Products</h2>
+      </div>
+      <a href="{% url 'shop:product_list' %}" class="btn btn-outline-primary">View All</a>
+    </div>
+
+    <div class="row g-4">
+      {% for product in featured_products %}
+      <div class="col-6 col-md-4 col-lg-3 reveal">
+        <div class="product-card">
+
+          <!-- Image -->
+          <div class="product-image">
+            <a href="{% url 'shop:product_detail' product.id product.slug %}">
+              {% if product.main_image %}
+                <img src="{{ product.main_image.url }}" alt="{{ product.name }}" loading="lazy">
+              {% else %}
+                <div class="d-flex align-items-center justify-content-center h-100">
+                  <i class="bi bi-image" style="font-size:3rem;color:var(--color-border)"></i>
+                </div>
+              {% endif %}
+            </a>
+            {% if product.discount_percentage %}
+              <span class="discount-badge">-{{ product.discount_percentage }}%</span>
+            {% endif %}
+            {% if product.is_featured %}
+              <span class="featured-badge">Featured</span>
+            {% endif %}
+            <!-- Quick Actions -->
+            <div class="product-overlay">
+              <a href="{% url 'shop:add_to_cart' product.id %}" class="btn">
+                <i class="bi bi-bag-plus"></i> Add to Cart
+              </a>
+              {% if user.is_authenticated %}
+              <a href="{% url 'shop:add_to_wishlist' product.id %}" class="btn" style="flex:0;padding:8px 10px">
+                <i class="bi bi-heart"></i>
+              </a>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Content -->
+          <div class="product-content">
+            <span class="product-category">{{ product.category.name }}</span>
+            <h5 class="product-title">
+              <a href="{% url 'shop:product_detail' product.id product.slug %}">{{ product.name }}</a>
+            </h5>
+            <div class="product-price">
+              <span class="current-price">₹{{ product.discount_price|default:product.price }}</span>
+              {% if product.discount_price %}
+                <span class="old-price">₹{{ product.price }}</span>
+              {% endif %}
+            </div>
+            <div class="product-actions">
+              <a href="{% url 'shop:product_detail' product.id product.slug %}" class="btn btn-primary">View Product</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12">
+        <div class="empty-state">
+          <i class="bi bi-bag empty-state-icon"></i>
+          <h4 class="empty-state-title">No featured products yet</h4>
+          <p class="empty-state-desc">Check back soon for our featured collection.</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+
+<!-- ==========================================
+     PROMO BANNER SECTION
+========================================== -->
+<section class="promo-section">
+  <div class="container">
+    <div class="row g-4">
+
+      <!-- Card 1: Dark -->
+      <div class="col-md-6">
+        <div class="promo-card promo-card-dark">
+          <div>
+            <span class="promo-badge">Limited Offer</span>
+            <h3 class="promo-title">Seller of the<br>Season 🏆</h3>
+            <p class="promo-desc">Join our marketplace and reach thousands of customers across India.</p>
+            <a href="{% url 'shop:become_seller' %}" class="btn-promo">
+              Become a Seller <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: Light -->
+      <div class="col-md-6">
+        <div class="promo-card promo-card-light">
+          <div>
+            <span class="promo-badge">Trending</span>
+            <h3 class="promo-title">New Arrivals<br>Every Week 🛍️</h3>
+            <p class="promo-desc">Fresh products from our trusted sellers. Don't miss out on the latest deals.</p>
+            <a href="{% url 'shop:product_list' %}" class="btn-promo">
+              Browse Products <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================
+     NEWSLETTER SECTION
+========================================== -->
+<section class="newsletter-section">
+  <div class="container">
+    <h2 class="newsletter-title">Stay in the Loop</h2>
+    <p class="newsletter-desc">Get updates on new arrivals, exclusive deals, and more. No spam, ever.</p>
+    <form class="newsletter-form" onsubmit="return false;">
+      <input type="email" class="form-control" placeholder="Enter your email address">
+      <button type="button" class="btn">Subscribe</button>
+    </form>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block page_js %}
+<script>
+// Scroll Reveal Animation
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+reveals.forEach(el => observer.observe(el));
+</script>
 {% endblock %}

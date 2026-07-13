@@ -1,190 +1,198 @@
-{% extends 'shop/basic.html' %}
+{% extends "shop/basic.html" %}
+{% load static %}
 
-{% block title %}Seller Dashboard - MCart{% endblock %}
+{% block title %}Seller Dashboard | MCart{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{% static 'css/pages/dashboard.css' %}">{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <h2>Seller Dashboard</h2>
-            <p class="text-muted">Welcome, {{ seller.user.get_full_name|default:seller.user.username }}!</p>
+<div class="container" style="padding:var(--space-8) 0 var(--space-16)">
+
+  <div class="dashboard-layout">
+
+    <!-- ==========================================
+         SIDEBAR
+    ========================================== -->
+    <aside class="dashboard-sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-profile">
+          <div class="sidebar-avatar"><i class="bi bi-shop"></i></div>
+          <div class="sidebar-name">{{ seller.store_name }}</div>
+          <div class="sidebar-role">
+            {% if seller.is_approved %}
+              <span style="color:var(--color-success)"><i class="bi bi-check-circle-fill"></i> Active Seller</span>
+            {% else %}
+              <span style="color:var(--color-warning)"><i class="bi bi-clock-fill"></i> Pending Approval</span>
+            {% endif %}
+          </div>
         </div>
-    </div>
-    <div class="row mb-4">
+        <nav class="sidebar-nav">
+          <a href="{% url 'shop:seller_dashboard' %}" class="active"><i class="bi bi-speedometer2"></i> Dashboard</a>
+          <a href="{% url 'shop:seller_products' %}"><i class="bi bi-box-seam"></i> My Products</a>
+          <a href="{% url 'shop:seller_add_product' %}"><i class="bi bi-plus-circle"></i> Add Product</a>
+          <hr style="border-color:var(--color-border-light);margin:8px 0">
+          <a href="{% url 'shop:home' %}"><i class="bi bi-house"></i> Back to Store</a>
+          <a href="{% url 'shop:user_profile' %}"><i class="bi bi-person"></i> My Profile</a>
+        </nav>
+      </div>
+    </aside>
 
-    <div class="col-md-3 mb-3">
+    <!-- ==========================================
+         MAIN CONTENT
+    ========================================== -->
+    <main>
 
-        <div class="card border-0 shadow-sm">
-
-            <div class="card-body text-center">
-
-                <h2 class="text-primary">
-
-                    {{ total_products }}
-
-                </h2>
-
-                <p class="mb-0">
-
-                    Total Products
-
-                </p>
-
-            </div>
-
+      <!-- Header -->
+      <div class="d-flex align-items-center justify-content-between mb-6" style="margin-bottom:var(--space-6)">
+        <div>
+          <h2 style="font-size:var(--text-2xl);font-weight:var(--weight-extrabold);letter-spacing:-0.03em;margin-bottom:4px">
+            Welcome, {{ seller.user.get_full_name|default:seller.user.username }}
+          </h2>
+          <p style="color:var(--color-text-muted);font-size:var(--text-sm)">Here's what's happening with your store today.</p>
         </div>
+        <a href="{% url 'shop:seller_add_product' %}" class="btn btn-primary">
+          <i class="bi bi-plus"></i> Add Product
+        </a>
+      </div>
 
-    </div>
+      {% if not seller.is_approved %}
+      <div class="alert alert-warning mb-5" style="border-radius:var(--radius-lg)">
+        <i class="bi bi-clock me-2"></i>
+        Your seller application is <strong>pending review</strong>. You can still add products, but they won't be visible until approved.
+      </div>
+      {% endif %}
 
-    <div class="col-md-3 mb-3">
-
-        <div class="card border-0 shadow-sm">
-
-            <div class="card-body text-center">
-
-                <h2 class="text-success">
-
-                    {{ published_products }}
-
-                </h2>
-
-                <p class="mb-0">
-
-                    Published
-
-                </p>
-
-            </div>
-
+      <!-- Stats -->
+      <div class="row g-4 mb-6" style="margin-bottom:var(--space-6)">
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#eff6ff;color:#2563eb"><i class="bi bi-box-seam"></i></div>
+            <div class="stat-value">{{ total_products }}</div>
+            <div class="stat-label">Total Products</div>
+          </div>
         </div>
-
-    </div>
-
-    <div class="col-md-3 mb-3">
-
-        <div class="card border-0 shadow-sm">
-
-            <div class="card-body text-center">
-
-                <h2 class="text-warning">
-
-                    {{ draft_products }}
-
-                </h2>
-
-                <p class="mb-0">
-
-                    Draft
-
-                </p>
-
-            </div>
-
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:var(--color-success-bg);color:var(--color-success)"><i class="bi bi-check-circle"></i></div>
+            <div class="stat-value">{{ published_products }}</div>
+            <div class="stat-label">Published</div>
+          </div>
         </div>
-
-    </div>
-
-    <div class="col-md-3 mb-3">
-
-        <div class="card border-0 shadow-sm">
-
-            <div class="card-body text-center">
-
-                <h2 class="text-danger">
-
-                    {{ out_of_stock_products }}
-
-                </h2>
-
-                <p class="mb-0">
-
-                    Out Of Stock
-
-                </p>
-
-            </div>
-
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:var(--color-warning-bg);color:var(--color-warning)"><i class="bi bi-file-earmark"></i></div>
+            <div class="stat-value">{{ draft_products }}</div>
+            <div class="stat-label">Drafts</div>
+          </div>
         </div>
-
-    </div>
-
-</div>
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h4>Your Store Information</h4>
-                    {% if seller.is_approved %}
-                        <span class="badge bg-success">Approved</span>
-                    {% else %}
-                        <span class="badge bg-warning">Pending Approval</span>
-                    {% endif %}
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h6>Store Details</h6>
-                            <p><strong>Store Name:</strong> {{ seller.store_name }}</p>
-                            <p><strong>Description:</strong> {{ seller.store_description|default:"Not provided" }}</p>
-                        </div>
-                        <div class="col-md-6">
-                            <h6>Contact Information</h6>
-                            <p><strong>Phone:</strong> {{ seller.phone }}</p>
-                            <p><strong>Address:</strong> {{ seller.address }}</p>
-                        </div>
-                            <a href="{% url 'shop:seller_products' %}"
-                                class="btn btn-dark w-100 mb-2">
-                                My Products
-                            </a>
-
-                            <a href="{% url 'shop:seller_add_product' %}"
-                                class="btn btn-success w-100 mb-2">
-                                Add Product
-                            </a>
-                        </div>
-                    
-                    {% if not seller.is_approved %}
-                        <div class="alert alert-warning">
-                            <i class="bi bi-clock"></i> Your seller application is pending approval. 
-                            You will be notified once it's reviewed by our team.
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:var(--color-danger-bg);color:var(--color-danger)"><i class="bi bi-exclamation-triangle"></i></div>
+            <div class="stat-value">{{ out_of_stock_products }}</div>
+            <div class="stat-label">Out of Stock</div>
+          </div>
         </div>
-        
+      </div>
+
+      <!-- Store Info + Recent Products -->
+      <div class="row g-4">
+
+        <!-- Store Info -->
         <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Quick Stats</h5>
-                </div>
-                <div class="card-body">
-                    <div class="text-center">
-                        <h3 class="text-primary">{{ seller.is_approved|yesno:"Active,Pending" }}</h3>
-                        <p class="text-muted">Account Status</p>
-                    </div>
-                    <hr>
-                    <p><strong>Joined:</strong> {{ seller.user.date_joined|date:"M d, Y" }}</p>
-                    <p><strong>Email:</strong> {{ seller.user.email }}</p>
-                </div>
+          <div class="table-card h-100">
+            <div class="table-card-header"><h5>Store Details</h5></div>
+            <div style="padding:22px">
+              <div class="mb-4">
+                <div style="font-size:var(--text-xs);color:var(--color-text-muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Store Name</div>
+                <div style="font-weight:var(--weight-semibold)">{{ seller.store_name }}</div>
+              </div>
+              {% if seller.store_description %}
+              <div class="mb-4">
+                <div style="font-size:var(--text-xs);color:var(--color-text-muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Description</div>
+                <div style="font-size:var(--text-sm);color:var(--color-text-secondary)">{{ seller.store_description }}</div>
+              </div>
+              {% endif %}
+              <div class="mb-4">
+                <div style="font-size:var(--text-xs);color:var(--color-text-muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Phone</div>
+                <div style="font-size:var(--text-sm)">{{ seller.phone }}</div>
+              </div>
+              <div class="mb-4">
+                <div style="font-size:var(--text-xs);color:var(--color-text-muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Address</div>
+                <div style="font-size:var(--text-sm);color:var(--color-text-secondary)">{{ seller.address }}</div>
+              </div>
+              <div>
+                <div style="font-size:var(--text-xs);color:var(--color-text-muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px">Member Since</div>
+                <div style="font-size:var(--text-sm)">{{ seller.user.date_joined|date:"F Y" }}</div>
+              </div>
             </div>
-            
-            <div class="card mt-3">
-                <div class="card-header">
-                    <h5>Actions</h5>
-                </div>
-                <div class="card-body">
-                    <a href="{% url 'shop:home' %}" class="btn btn-primary btn-block mb-2">
-                        <i class="bi bi-house"></i> Go to Store
-                    </a>
-                    {% if seller.is_approved %}
-                        <a href="{% url 'shop:seller_list' %}" class="btn btn-success btn-block">
-                            <i class="bi bi-eye"></i> View Public Profile
-                        </a>
-                    {% endif %}
-                </div>
-            </div>
+          </div>
         </div>
-    </div>
+
+        <!-- Recent Products -->
+        <div class="col-md-8">
+          <div class="table-card">
+            <div class="table-card-header">
+              <h5>Recent Products</h5>
+              <a href="{% url 'shop:seller_products' %}" class="btn btn-sm btn-secondary">View All</a>
+            </div>
+            {% if recent_products %}
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Price</th>
+                  <th>Stock</th>
+                  <th>Status</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for product in recent_products %}
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center gap-3">
+                      {% if product.main_image %}
+                        <img src="{{ product.main_image.url }}" alt="{{ product.name }}"
+                          style="width:42px;height:42px;object-fit:cover;border-radius:var(--radius-md);flex-shrink:0">
+                      {% endif %}
+                      <span style="font-weight:var(--weight-semibold);font-size:var(--text-sm)">{{ product.name|truncatechars:28 }}</span>
+                    </div>
+                  </td>
+                  <td>₹{{ product.discount_price|default:product.price }}</td>
+                  <td>
+                    {% if product.stock == 0 %}
+                      <span class="status-badge status-badge-cancelled">Out</span>
+                    {% elif product.stock <= 5 %}
+                      <span class="status-badge status-badge-pending">{{ product.stock }}</span>
+                    {% else %}
+                      <span class="status-badge status-badge-delivered">{{ product.stock }}</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if product.status == 'published' %}
+                      <span class="status-badge status-badge-delivered">Published</span>
+                    {% else %}
+                      <span class="status-badge status-badge-pending">{{ product.get_status_display }}</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <a href="{% url 'shop:seller_edit_product' product.id %}" class="btn btn-sm btn-secondary">Edit</a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            {% else %}
+            <div style="padding:40px;text-align:center;color:var(--color-text-muted)">
+              <i class="bi bi-box-seam" style="font-size:2.5rem;display:block;margin-bottom:12px"></i>
+              No products yet.
+              <a href="{% url 'shop:seller_add_product' %}" class="d-block mt-3 btn btn-primary btn-sm">Add Your First Product</a>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
 </div>
 {% endblock %}

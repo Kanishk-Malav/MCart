@@ -1,120 +1,120 @@
-{% extends 'shop/basic.html' %}
+{% extends "shop/basic.html" %}
+{% load static %}
 
-{% block title %}Order #{{ order.order_number }} - MCart{% endblock %}
+{% block title %}Order #{{ order.order_number }} | MCart{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{% static 'css/pages/cart.css' %}">{% endblock %}
 
 {% block content %}
-<div class="container my-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2>Order #{{ order.order_number }}</h2>
-                <span class="badge bg-{% if order.status == 'delivered' %}success{% elif order.status == 'cancelled' %}danger{% else %}primary{% endif %} fs-6">
-                    {{ order.get_status_display }}
-                </span>
+<div class="page-header">
+  <div class="container">
+    <nav aria-label="breadcrumb" class="mb-3">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'shop:home' %}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'shop:order_list' %}">My Orders</a></li>
+        <li class="breadcrumb-item active">#{{ order.order_number }}</li>
+      </ol>
+    </nav>
+    <div class="d-flex align-items-center gap-4">
+      <h1 class="page-header-title mb-0">Order #{{ order.order_number }}</h1>
+      <span class="status-badge status-badge-{{ order.status }}">{{ order.get_status_display }}</span>
+    </div>
+    <p class="page-header-desc">Placed on {{ order.created_at|date:"F d, Y" }}</p>
+  </div>
+</div>
+
+<div class="container py-5">
+  <div class="row g-5 align-items-start">
+
+    <!-- Left -->
+    <div class="col-lg-8">
+
+      <!-- Items -->
+      <div class="table-card mb-5">
+        <div class="table-card-header"><h5>Order Items</h5></div>
+        <div style="padding:0 22px">
+          {% for item in order.items.all %}
+          <div class="d-flex align-items-center gap-4 py-4 {% if not forloop.last %}border-bottom{% endif %}"
+               style="border-color:var(--color-border-light)!important">
+            {% if item.product.main_image %}
+              <img src="{{ item.product.main_image.url }}" alt="{{ item.product.name }}"
+                style="width:70px;height:70px;object-fit:cover;border-radius:var(--radius-lg);flex-shrink:0;border:1px solid var(--color-border)">
+            {% endif %}
+            <div class="flex-grow-1">
+              <div style="font-weight:var(--weight-semibold)">{{ item.product.name }}</div>
+              <div style="font-size:var(--text-sm);color:var(--color-text-muted)">Qty: {{ item.quantity }}</div>
             </div>
+            <div class="text-end">
+              <div style="font-size:var(--text-sm);color:var(--color-text-muted)">₹{{ item.price }} each</div>
+              <div style="font-weight:var(--weight-bold);font-size:var(--text-lg)">₹{{ item.total_price }}</div>
+            </div>
+          </div>
+          {% endfor %}
         </div>
+      </div>
+
+      <!-- Shipping -->
+      <div class="table-card">
+        <div class="table-card-header"><h5>Shipping Address</h5></div>
+        <div style="padding:22px">
+          <div style="font-weight:var(--weight-semibold);margin-bottom:6px">{{ order.shipping_name }}</div>
+          <div style="font-size:var(--text-sm);color:var(--color-text-secondary);line-height:var(--leading-relaxed)">
+            {{ order.shipping_address }}<br>
+            {{ order.shipping_city }}, {{ order.shipping_state }} {{ order.shipping_postal_code }}<br>
+            {{ order.shipping_country }}<br>
+            <strong>Phone:</strong> {{ order.shipping_phone }}<br>
+            <strong>Email:</strong> {{ order.shipping_email }}
+          </div>
+        </div>
+      </div>
+
     </div>
 
-    <div class="row">
-        <div class="col-md-8">
-            <!-- Order Items -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5>Order Items</h5>
-                </div>
-                <div class="card-body">
-                    {% for item in order.items.all %}
-                    <div class="row mb-3">
-                        <div class="col-md-2">
-                            <img src="{{ item.product.main_image.url }}" class="img-fluid rounded" alt="{{ item.product.name }}">
-                        </div>
-                        <div class="col-md-6">
-                            <h6>{{ item.product.name }}</h6>
-                            <p class="text-muted mb-0">Quantity: {{ item.quantity }}</p>
-                        </div>
-                        <div class="col-md-4 text-end">
-                            <p class="mb-0">₹{{ item.price }} each</p>
-                            <strong>₹{{ item.total_price }}</strong>
-                        </div>
-                    </div>
-                    {% if not forloop.last %}<hr>{% endif %}
-                    {% endfor %}
-                </div>
-            </div>
+    <!-- Right: Summary -->
+    <div class="col-lg-4">
 
-            <!-- Shipping Information -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5>Shipping Information</h5>
-                </div>
-                <div class="card-body">
-                    <address>
-                        <strong>{{ order.shipping_name }}</strong><br>
-                        {{ order.shipping_address }}<br>
-                        {{ order.shipping_city }}, {{ order.shipping_state }} {{ order.shipping_postal_code }}<br>
-                        {{ order.shipping_country }}<br>
-                        <abbr title="Phone">P:</abbr> {{ order.shipping_phone }}<br>
-                        <abbr title="Email">E:</abbr> {{ order.shipping_email }}
-                    </address>
-                </div>
+      <div class="order-summary-card">
+        <div class="order-summary-title">Order Summary</div>
+        <div class="summary-line"><span>Subtotal</span><span>₹{{ order.subtotal }}</span></div>
+        <div class="summary-line"><span>Shipping</span><span>₹{{ order.shipping_cost }}</span></div>
+        <div class="summary-line"><span>Tax (GST)</span><span>₹{{ order.tax_amount }}</span></div>
+        <div class="summary-line total"><span>Total Paid</span><span>₹{{ order.total_amount }}</span></div>
+
+        <div class="mt-4 pt-4" style="border-top:1px solid var(--color-border-light)">
+          <div class="d-flex flex-column gap-3">
+            <div class="d-flex justify-content-between align-items-center">
+              <span style="font-size:var(--text-sm);color:var(--color-text-muted)">Payment</span>
+              <span style="font-size:var(--text-sm);font-weight:var(--weight-medium)">{{ order.get_payment_status_display }}</span>
             </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <span style="font-size:var(--text-sm);color:var(--color-text-muted)">Order Status</span>
+              <span class="status-badge status-badge-{{ order.status }}">{{ order.get_status_display }}</span>
+            </div>
+            {% if order.tracking_number %}
+            <div class="d-flex justify-content-between align-items-center">
+              <span style="font-size:var(--text-sm);color:var(--color-text-muted)">Tracking</span>
+              <span style="font-size:var(--text-sm);font-weight:var(--weight-medium)">{{ order.tracking_number }}</span>
+            </div>
+            {% endif %}
+            {% if order.estimated_delivery %}
+            <div class="d-flex justify-content-between align-items-center">
+              <span style="font-size:var(--text-sm);color:var(--color-text-muted)">Est. Delivery</span>
+              <span style="font-size:var(--text-sm);font-weight:var(--weight-medium)">{{ order.estimated_delivery|date:"d M Y" }}</span>
+            </div>
+            {% endif %}
+          </div>
         </div>
 
-        <div class="col-md-4">
-            <!-- Order Summary -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5>Order Summary</h5>
-                </div>
-                <div class="card-body">
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Subtotal:</span>
-                        <span>₹{{ order.subtotal }}</span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Shipping:</span>
-                        <span>₹{{ order.shipping_cost }}</span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Tax:</span>
-                        <span>₹{{ order.tax_amount }}</span>
-                    </div>
-                    <hr>
-                    <div class="d-flex justify-content-between">
-                        <strong>Total:</strong>
-                        <strong>₹{{ order.total_amount }}</strong>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Order Status -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5>Order Status</h5>
-                </div>
-                <div class="card-body">
-                    <p><strong>Status:</strong> {{ order.get_status_display }}</p>
-                    <p><strong>Payment:</strong> {{ order.get_payment_status_display }}</p>
-                    <p><strong>Order Date:</strong> {{ order.created_at|date:"F d, Y" }}</p>
-                    {% if order.tracking_number %}
-                    <p><strong>Tracking:</strong> {{ order.tracking_number }}</p>
-                    {% endif %}
-                    {% if order.estimated_delivery %}
-                    <p><strong>Estimated Delivery:</strong> {{ order.estimated_delivery|date:"F d, Y" }}</p>
-                    {% endif %}
-                </div>
-            </div>
-
-            <!-- Actions -->
-            <div class="card">
-                <div class="card-body text-center">
-                    <a href="{% url 'shop:order_list' %}" class="btn btn-outline-primary">← Back to Orders</a>
-                    {% if order.status == 'pending' %}
-                    <button class="btn btn-outline-danger" onclick="alert('Contact support to cancel order')">Cancel Order</button>
-                    {% endif %}
-                </div>
-            </div>
+        <div class="d-grid gap-2 mt-5">
+          <a href="{% url 'shop:order_list' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> All Orders
+          </a>
+          <a href="{% url 'shop:product_list' %}" class="btn btn-primary">
+            Continue Shopping
+          </a>
         </div>
+      </div>
+
     </div>
+  </div>
 </div>
 {% endblock %}

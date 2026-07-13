@@ -1,102 +1,130 @@
-{% extends 'shop/basic.html' %}
+{% extends "shop/basic.html" %}
+{% load static %}
 
-{% block title %}Your Shopping Cart - MCart{% endblock %}
-
-{% if messages %}
-<div class="container">
-    {% for message in messages %}
-    <div class="alert alert-{{ message.tags }}">
-        {{ message }}
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
+{% block title %}Shopping Cart | MCart{% endblock %}
+{% block page_css %}<link rel="stylesheet" href="{% static 'css/pages/cart.css' %}">{% endblock %}
 
 {% block content %}
-<div class="container my-5">
-    <h2>Your Shopping Cart</h2>
-    
-    {% if cart.items.all %}
-    <div class="table-responsive">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Total</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in cart.items.all %}
-                <tr>
-                    <td>
-                        <div class="d-flex align-items-center">
-                            <img src="{{ item.product.main_image.url }}" alt="{{ item.product.name }}" 
-                                 class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;">
-                            <div class="ms-3">
-                                <h6>{{ item.product.name }}</h6>
-                                <small class="text-muted">{{ item.product.category.name }}</small>
-                            </div>
-                        </div>
-                    </td>
-                    <td>₹{{ item.product.current_price }}</td>
-                    <td>
-                        <form method="post" action="{% url 'shop:update_cart' item.id %}">
-                            {% csrf_token %}
-                            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" 
-                                   class="form-control" style="width: 70px;">
-                        </form>
-                    </td>
-                    <td>₹{{ item.total_price }}</td>
-                    <td>
-                        <a href="{% url 'shop:remove_from_cart' item.id %}" class="btn btn-danger btn-sm">
-                            <i class="bi bi-trash"></i>
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="3" class="text-end"><strong>Total:</strong></td>
-                    <td><strong>₹{{ cart.total_price }}</strong></td>
-                    <td></td>
-                </tr>
-            </tfoot>
-        </table>
-        
-        <div class="d-flex justify-content-between">
-            <a href="{% url 'shop:product_list' %}" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left"></i> Continue Shopping
-            </a>
-            {% if user.is_authenticated %}
-                <a href="{% url 'shop:checkout' %}" class="btn btn-primary">
-                    Proceed to Checkout <i class="bi bi-arrow-right"></i>
-                </a>
-            {% else %}
-                <a href="{% url 'shop:website_login' %}?next={% url 'shop:checkout' %}" class="btn btn-primary">
-                    Login to Checkout <i class="bi bi-arrow-right"></i>
-                </a>
-            {% endif %}
-        </div>
-    </div>
-    {% else %}
-    <div class="alert alert-info text-center">
-        <h4>Your Cart is Empty</h4>
-        <p>Add some products to your cart to proceed with checkout.</p>
-        <a href="{% url 'shop:product_list' %}" class="btn btn-primary">Start Shopping</a>
-    </div>
-    {% endif %}
+<div class="page-header">
+  <div class="container">
+    <h1 class="page-header-title">Shopping Cart</h1>
+    <p class="page-header-desc">Review your selected items before checkout.</p>
+  </div>
 </div>
 
-<script>
-// Auto-submit quantity update forms on change
-document.querySelectorAll('input[name="quantity"]').forEach(input => {
-    input.addEventListener('change', function() {
-        this.form.submit();
-    });
-});
-</script>
+<div class="container py-5">
+  {% if cart.items.all %}
+  <div class="row g-5 align-items-start">
+
+    <!-- ==========================================
+         CART ITEMS
+    ========================================== -->
+    <div class="col-lg-8">
+      <div class="table-card">
+        <div class="table-card-header">
+          <h5>Items ({{ cart.total_items }})</h5>
+          <a href="{% url 'shop:product_list' %}" class="btn btn-sm btn-secondary">
+            <i class="bi bi-arrow-left"></i> Continue Shopping
+          </a>
+        </div>
+        <div style="padding:0 22px">
+          <table class="cart-table w-100">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th style="text-align:center">Qty</th>
+                <th style="text-align:right">Price</th>
+                <th style="text-align:right">Total</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in cart.items.all %}
+              <tr>
+                <td>
+                  <div class="d-flex align-items-center gap-3">
+                    {% if item.product.main_image %}
+                      <img src="{{ item.product.main_image.url }}" alt="{{ item.product.name }}" class="cart-product-img">
+                    {% endif %}
+                    <div>
+                      <div class="cart-product-name">{{ item.product.name }}</div>
+                      <div class="cart-product-meta">{{ item.product.category.name }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td style="text-align:center">
+                  <form method="post" action="{% url 'shop:update_cart' item.id %}">
+                    {% csrf_token %}
+                    <div class="cart-qty-control" style="display:inline-flex">
+                      <button type="submit" name="quantity" value="{{ item.quantity|add:'-1' }}"><i class="bi bi-dash"></i></button>
+                      <input type="text" value="{{ item.quantity }}" readonly>
+                      <button type="submit" name="quantity" value="{{ item.quantity|add:'1' }}"><i class="bi bi-plus"></i></button>
+                    </div>
+                  </form>
+                </td>
+                <td style="text-align:right;font-weight:var(--weight-medium)">₹{{ item.product.current_price }}</td>
+                <td style="text-align:right;font-weight:var(--weight-bold)">₹{{ item.total_price }}</td>
+                <td style="text-align:right">
+                  <a href="{% url 'shop:remove_from_cart' item.id %}" class="cart-remove" title="Remove">
+                    <i class="bi bi-trash3"></i>
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         ORDER SUMMARY
+    ========================================== -->
+    <div class="col-lg-4">
+      <div class="order-summary-card">
+        <div class="order-summary-title">Order Summary</div>
+
+        <div class="summary-line">
+          <span>Subtotal</span>
+          <span>₹{{ cart.total_price }}</span>
+        </div>
+        <div class="summary-line">
+          <span>Shipping</span>
+          <span class="text-success">Free</span>
+        </div>
+        <div class="summary-line total">
+          <span>Total</span>
+          <span>₹{{ cart.total_price }}</span>
+        </div>
+
+        <div class="mt-4 d-grid gap-2">
+          {% if user.is_authenticated %}
+            <a href="{% url 'shop:checkout' %}" class="btn btn-primary btn-lg">
+              <i class="bi bi-lock"></i> Proceed to Checkout
+            </a>
+          {% else %}
+            <a href="{% url 'shop:website_login' %}?next={% url 'shop:checkout' %}" class="btn btn-primary btn-lg">
+              <i class="bi bi-box-arrow-in-right"></i> Login to Checkout
+            </a>
+          {% endif %}
+          <a href="{% url 'shop:product_list' %}" class="btn btn-secondary">Continue Shopping</a>
+        </div>
+
+        <div class="mt-4 d-flex align-items-center justify-content-center gap-2" style="font-size:var(--text-xs);color:var(--color-text-muted)">
+          <i class="bi bi-shield-lock"></i> Secure Checkout · SSL Encrypted
+        </div>
+      </div>
+    </div>
+
+  </div>
+  {% else %}
+  <!-- Empty Cart -->
+  <div class="empty-state">
+    <i class="bi bi-bag empty-state-icon"></i>
+    <h4 class="empty-state-title">Your cart is empty</h4>
+    <p class="empty-state-desc">Add some products to your cart and they'll show up here.</p>
+    <a href="{% url 'shop:product_list' %}" class="btn btn-primary btn-lg">Start Shopping</a>
+  </div>
+  {% endif %}
+</div>
 {% endblock %}

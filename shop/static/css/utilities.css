@@ -1,0 +1,186 @@
+/* ==========================================
+   SPACING
+========================================== */
+
+.mt-section{
+    margin-top:100px;
+}
+
+.mb-section{
+    margin-bottom:100px;
+}
+
+.py-section{
+    padding:100px 0;
+}
+
+.py-sm{
+    padding:60px 0;
+}
+
+.py-lg{
+    padding:140px 0;
+}
+
+
+/* ==========================================
+   BACKGROUND
+========================================== */
+
+.bg-primary{
+    background:var(--primary) !important;
+}
+
+.bg-surface{
+    background:var(--surface) !important;
+}
+
+.bg-white{
+    background:#fff !important;
+}
+
+
+/* ==========================================
+   TEXT
+========================================== */
+
+.text-primary{
+    color:var(--primary) !important;
+}
+
+.text-secondary{
+    color:var(--secondary) !important;
+}
+
+.text-muted-custom{
+    color:#8A8A8A !important;
+}
+
+.text-white{
+    color:#fff !important;
+}
+
+
+/* ==========================================
+   BORDER RADIUS
+========================================== */
+
+.radius-sm{
+    border-radius:12px;
+}
+
+.radius-md{
+    border-radius:18px;
+}
+
+.radius-lg{
+    border-radius:24px;
+}
+
+.radius-xl{
+    border-radius:32px;
+}
+
+.rounded-full{
+    border-radius:999px;
+}
+
+
+/* ==========================================
+   SHADOW
+========================================== */
+
+.shadow-soft{
+    box-shadow:var(--shadow);
+}
+
+.shadow-none{
+    box-shadow:none !important;
+}
+
+
+/* ==========================================
+   DISPLAY
+========================================== */
+
+.flex{
+    display:flex;
+}
+
+.inline-flex{
+    display:inline-flex;
+}
+
+.flex-center{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.flex-between{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.flex-column{
+    display:flex;
+    flex-direction:column;
+}
+
+
+/* ==========================================
+   WIDTH
+========================================== */
+
+.w-fit{
+    width:fit-content;
+}
+
+.w-full{
+    width:100%;
+}
+
+
+/* ==========================================
+   CURSOR
+========================================== */
+
+.cursor-pointer{
+    cursor:pointer;
+}
+
+
+/* ==========================================
+   OVERFLOW
+========================================== */
+
+.overflow-hidden{
+    overflow:hidden;
+}
+
+
+/* ==========================================
+   TRANSITION
+========================================== */
+
+.transition{
+    transition:.3s ease;
+}
+
+
+/* ==========================================
+   HOVER
+========================================== */
+
+.hover-up:hover{
+    transform:translateY(-5px);
+}
+
+.hover-shadow:hover{
+    box-shadow:var(--shadow);
+}
+
+.hover-scale:hover{
+    transform:scale(1.03);
+}

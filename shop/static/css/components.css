@@ -1,0 +1,264 @@
+/* ==========================================
+   BUTTONS
+========================================== */
+
+.btn-modern{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+
+    padding:14px 28px;
+
+    border:none;
+    border-radius:var(--radius);
+
+    background:var(--primary);
+    color:#fff;
+
+    font-weight:600;
+
+    transition:.3s ease;
+}
+
+.btn-modern:hover{
+
+    background:#000;
+
+    color:#fff;
+
+    transform:translateY(-3px);
+
+    box-shadow:var(--shadow);
+
+}
+
+.btn-outline-modern{
+
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:14px 28px;
+
+    border-radius:var(--radius);
+
+    border:1px solid var(--border);
+
+    background:#fff;
+
+    color:var(--primary);
+
+    transition:.3s ease;
+
+}
+
+.btn-outline-modern:hover{
+
+    background:var(--primary);
+
+    color:#fff;
+
+}
+
+
+/* ==========================================
+   CARDS
+========================================== */
+
+.card-modern{
+
+    background:#fff;
+
+    border-radius:24px;
+
+    border:1px solid var(--border);
+
+    overflow:hidden;
+
+    transition:.35s ease;
+
+}
+
+.card-modern:hover{
+
+    transform:translateY(-6px);
+
+    box-shadow:var(--shadow);
+
+}
+
+
+/* ==========================================
+   PRODUCT CARD
+========================================== */
+
+.product-card{
+
+    background:#fff;
+
+    border-radius:24px;
+
+    overflow:hidden;
+
+    border:1px solid var(--border);
+
+    transition:.35s ease;
+
+}
+
+.product-card:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:var(--shadow);
+
+}
+
+.product-image{
+
+    width:100%;
+
+    aspect-ratio:1/1;
+
+    overflow:hidden;
+
+    background:#f8f8f8;
+
+}
+
+.product-image img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    transition:.4s ease;
+
+}
+
+.product-card:hover .product-image img{
+
+    transform:scale(1.05);
+
+}
+
+.product-content{
+
+    padding:22px;
+
+}
+
+.product-title{
+
+    font-size:18px;
+
+    font-weight:700;
+
+    margin-bottom:10px;
+
+}
+
+.product-price{
+
+    font-size:22px;
+
+    font-weight:700;
+
+    color:var(--primary);
+
+}
+
+.product-old-price{
+
+    color:#999;
+
+    text-decoration:line-through;
+
+    margin-left:10px;
+
+}
+
+
+/* ==========================================
+   BADGES
+========================================== */
+
+.badge-modern{
+
+    display:inline-block;
+
+    padding:8px 14px;
+
+    border-radius:999px;
+
+    background:#f4f4f4;
+
+    font-size:13px;
+
+    font-weight:600;
+
+}
+
+
+/* ==========================================
+   SECTION TITLE
+========================================== */
+
+.section-title{
+
+    font-size:42px;
+
+    font-weight:800;
+
+    margin-bottom:16px;
+
+}
+
+.section-description{
+
+    color:var(--secondary);
+
+    max-width:650px;
+
+}
+
+
+/* ==========================================
+   SEARCH
+========================================== */
+
+.search-box{
+
+    width:100%;
+
+    border:1px solid var(--border);
+
+    border-radius:999px;
+
+    padding:14px 22px;
+
+    background:#fff;
+
+}
+
+
+/* ==========================================
+   FOOTER
+========================================== */
+
+.footer-link{
+
+    color:var(--secondary);
+
+    transition:.3s;
+
+}
+
+.footer-link:hover{
+
+    color:var(--primary);
+
+}

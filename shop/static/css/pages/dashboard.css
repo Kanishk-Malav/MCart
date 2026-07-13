@@ -1,0 +1,1411 @@
+/* ==========================================================
+   CUSTOMER DASHBOARD
+========================================================== */
+
+.dashboard-page{
+
+    padding:70px 0 110px;
+
+    background:#f8fafc;
+
+    min-height:100vh;
+
+}
+
+
+/* ==========================================================
+   DASHBOARD HEADER
+========================================================== */
+
+.dashboard-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:30px;
+
+    margin-bottom:45px;
+
+    flex-wrap:wrap;
+
+}
+
+.dashboard-title h2{
+
+    font-size:46px;
+
+    font-weight:800;
+
+    color:#0f172a;
+
+    margin-bottom:10px;
+
+}
+
+.dashboard-title p{
+
+    color:#64748b;
+
+    margin:0;
+
+}
+
+
+/* ==========================================================
+   PROFILE CARD
+========================================================== */
+
+.profile-card{
+
+    background:#fff;
+
+    border-radius:30px;
+
+    padding:35px;
+
+    box-shadow:0 20px 55px rgba(15,23,42,.06);
+
+    display:flex;
+
+    align-items:center;
+
+    gap:25px;
+
+    margin-bottom:35px;
+
+}
+
+.profile-avatar{
+
+    width:110px;
+
+    height:110px;
+
+    border-radius:50%;
+
+    overflow:hidden;
+
+    background:#f8fafc;
+
+    border:5px solid #fff;
+
+    box-shadow:0 10px 25px rgba(15,23,42,.08);
+
+}
+
+.profile-avatar img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+}
+
+.profile-info{
+
+    flex:1;
+
+}
+
+.profile-info h3{
+
+    font-size:30px;
+
+    font-weight:800;
+
+    margin-bottom:10px;
+
+    color:#0f172a;
+
+}
+
+.profile-info p{
+
+    color:#64748b;
+
+    margin-bottom:18px;
+
+}
+
+.profile-badges{
+
+    display:flex;
+
+    gap:12px;
+
+    flex-wrap:wrap;
+
+}
+
+.profile-badge{
+
+    padding:8px 16px;
+
+    border-radius:999px;
+
+    background:#eff6ff;
+
+    color:var(--primary);
+
+    font-size:13px;
+
+    font-weight:600;
+
+}
+
+
+/* ==========================================================
+   QUICK STATS
+========================================================== */
+
+.dashboard-stats{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:25px;
+
+    margin-bottom:45px;
+
+}
+
+.dashboard-stat{
+
+    background:#fff;
+
+    border-radius:24px;
+
+    padding:30px;
+
+    box-shadow:0 15px 40px rgba(15,23,42,.05);
+
+    transition:.35s;
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+.dashboard-stat:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:0 25px 60px rgba(15,23,42,.08);
+
+}
+
+.dashboard-stat::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:-45px;
+
+    right:-45px;
+
+    width:120px;
+
+    height:120px;
+
+    border-radius:50%;
+
+    background:rgba(37,99,235,.05);
+
+}
+
+.dashboard-stat-icon{
+
+    width:64px;
+
+    height:64px;
+
+    border-radius:20px;
+
+    background:#eff6ff;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    margin-bottom:22px;
+
+}
+
+.dashboard-stat-icon i{
+
+    font-size:28px;
+
+    color:var(--primary);
+
+}
+
+.dashboard-stat h2{
+
+    font-size:38px;
+
+    font-weight:800;
+
+    color:#111827;
+
+    margin-bottom:8px;
+
+}
+
+.dashboard-stat p{
+
+    margin:0;
+
+    color:#64748b;
+
+}
+
+
+/* ==========================================================
+   WELCOME BANNER
+========================================================== */
+
+.welcome-banner{
+
+    background:linear-gradient(
+
+        135deg,
+
+        #2563eb,
+
+        #1d4ed8
+
+    );
+
+    color:#fff;
+
+    border-radius:30px;
+
+    padding:45px;
+
+    margin-bottom:45px;
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+.welcome-banner::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:320px;
+
+    height:320px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.08);
+
+    right:-100px;
+
+    top:-120px;
+
+}
+
+.welcome-banner h2{
+
+    font-size:40px;
+
+    font-weight:800;
+
+    margin-bottom:15px;
+
+    position:relative;
+
+    z-index:2;
+
+}
+
+.welcome-banner p{
+
+    max-width:650px;
+
+    color:rgba(255,255,255,.85);
+
+    line-height:1.8;
+
+    position:relative;
+
+    z-index:2;
+
+}
+
+.welcome-banner .btn{
+
+    margin-top:25px;
+
+    border-radius:16px;
+
+    padding:14px 28px;
+
+    font-weight:600;
+
+}
+
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media(max-width:1200px){
+
+.dashboard-stats{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+}
+
+@media(max-width:992px){
+
+.profile-card{
+
+    flex-direction:column;
+
+    text-align:center;
+
+}
+
+.profile-badges{
+
+    justify-content:center;
+
+}
+
+}
+
+@media(max-width:768px){
+
+.dashboard-stats{
+
+    grid-template-columns:1fr;
+
+}
+
+.dashboard-title h2{
+
+    font-size:34px;
+
+}
+
+.welcome-banner{
+
+    padding:35px;
+
+}
+
+.welcome-banner h2{
+
+    font-size:32px;
+
+}
+
+}
+
+@media(max-width:576px){
+
+.profile-card{
+
+    padding:25px;
+
+}
+
+.dashboard-stat{
+
+    padding:24px;
+
+}
+
+}
+
+/* ==========================================================
+   DASHBOARD CONTENT
+========================================================== */
+
+.dashboard-content{
+
+    display:grid;
+
+    grid-template-columns:2fr 1fr;
+
+    gap:30px;
+
+}
+
+
+/* ==========================================================
+   DASHBOARD CARD
+========================================================== */
+
+.dashboard-card{
+
+    background:#fff;
+
+    border-radius:28px;
+
+    padding:32px;
+
+    box-shadow:0 18px 45px rgba(15,23,42,.05);
+
+    border:1px solid #eef2f7;
+
+}
+
+.dashboard-card h4{
+
+    font-size:24px;
+
+    font-weight:700;
+
+    margin-bottom:28px;
+
+    color:#0f172a;
+
+}
+
+
+/* ==========================================================
+   RECENT ORDERS
+========================================================== */
+
+.orders-table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+.orders-table thead th{
+
+    padding:18px 15px;
+
+    text-align:left;
+
+    font-size:14px;
+
+    color:#64748b;
+
+    border-bottom:1px solid #eef2f7;
+
+}
+
+.orders-table tbody td{
+
+    padding:20px 15px;
+
+    border-bottom:1px solid #f1f5f9;
+
+    vertical-align:middle;
+
+}
+
+.orders-table tbody tr{
+
+    transition:.3s;
+
+}
+
+.orders-table tbody tr:hover{
+
+    background:#f8fafc;
+
+}
+
+.order-id{
+
+    font-weight:700;
+
+    color:#111827;
+
+}
+
+.order-price{
+
+    font-weight:700;
+
+    color:var(--primary);
+
+}
+
+
+/* ==========================================================
+   ORDER STATUS
+========================================================== */
+
+.order-status{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    padding:8px 16px;
+
+    border-radius:999px;
+
+    font-size:13px;
+
+    font-weight:600;
+
+}
+
+.status-processing{
+
+    background:#dbeafe;
+
+    color:#2563eb;
+
+}
+
+.status-shipped{
+
+    background:#dcfce7;
+
+    color:#16a34a;
+
+}
+
+.status-delivered{
+
+    background:#ecfdf5;
+
+    color:#059669;
+
+}
+
+.status-cancelled{
+
+    background:#fee2e2;
+
+    color:#dc2626;
+
+}
+
+
+/* ==========================================================
+   NOTIFICATIONS
+========================================================== */
+
+.notification-list{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+}
+
+.notification-item{
+
+    display:flex;
+
+    gap:16px;
+
+    padding:20px;
+
+    border-radius:18px;
+
+    background:#f8fafc;
+
+    transition:.3s;
+
+}
+
+.notification-item:hover{
+
+    background:#eff6ff;
+
+}
+
+.notification-icon{
+
+    width:50px;
+
+    height:50px;
+
+    border-radius:16px;
+
+    background:#fff;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    color:var(--primary);
+
+    font-size:20px;
+
+}
+
+.notification-content h6{
+
+    margin-bottom:6px;
+
+    font-weight:700;
+
+}
+
+.notification-content p{
+
+    margin:0;
+
+    color:#64748b;
+
+    font-size:14px;
+
+}
+
+.notification-time{
+
+    margin-top:8px;
+
+    font-size:12px;
+
+    color:#94a3b8;
+
+}
+
+
+/* ==========================================================
+   ACTIVITY TIMELINE
+========================================================== */
+
+.activity-timeline{
+
+    position:relative;
+
+    padding-left:32px;
+
+}
+
+.activity-timeline::before{
+
+    content:"";
+
+    position:absolute;
+
+    left:10px;
+
+    top:0;
+
+    bottom:0;
+
+    width:2px;
+
+    background:#dbe4ee;
+
+}
+
+.activity-item{
+
+    position:relative;
+
+    margin-bottom:28px;
+
+}
+
+.activity-item:last-child{
+
+    margin-bottom:0;
+
+}
+
+.activity-dot{
+
+    position:absolute;
+
+    left:-31px;
+
+    top:4px;
+
+    width:18px;
+
+    height:18px;
+
+    border-radius:50%;
+
+    background:var(--primary);
+
+    border:4px solid #fff;
+
+    box-shadow:0 0 0 2px var(--primary);
+
+}
+
+.activity-content{
+
+    background:#f8fafc;
+
+    padding:18px;
+
+    border-radius:16px;
+
+}
+
+.activity-content h6{
+
+    margin-bottom:8px;
+
+    font-weight:700;
+
+}
+
+.activity-content p{
+
+    margin:0;
+
+    color:#64748b;
+
+}
+
+.activity-time{
+
+    margin-top:8px;
+
+    font-size:13px;
+
+    color:#94a3b8;
+
+}
+
+
+/* ==========================================================
+   LOYALTY CARD
+========================================================== */
+
+.loyalty-card{
+
+    margin-top:30px;
+
+    padding:30px;
+
+    border-radius:24px;
+
+    background:linear-gradient(
+
+        135deg,
+
+        #f59e0b,
+
+        #fbbf24
+
+    );
+
+    color:#fff;
+
+}
+
+.loyalty-card h5{
+
+    margin-bottom:12px;
+
+    font-weight:700;
+
+}
+
+.loyalty-card h2{
+
+    font-size:44px;
+
+    font-weight:800;
+
+    margin-bottom:12px;
+
+}
+
+.loyalty-card p{
+
+    margin:0;
+
+    color:rgba(255,255,255,.90);
+
+}
+
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media(max-width:1200px){
+
+.dashboard-content{
+
+    grid-template-columns:1fr;
+
+}
+
+}
+
+@media(max-width:768px){
+
+.orders-table{
+
+    min-width:700px;
+
+}
+
+.dashboard-card{
+
+    padding:24px;
+
+}
+
+.notification-item{
+
+    flex-direction:column;
+
+}
+
+}
+
+@media(max-width:576px){
+
+.dashboard-card h4{
+
+    font-size:20px;
+
+}
+
+.loyalty-card h2{
+
+    font-size:34px;
+
+}
+
+}
+
+/* ==========================================================
+   SAVED ADDRESSES
+========================================================== */
+
+.saved-addresses{
+
+    margin-top:40px;
+
+}
+
+.address-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:24px;
+
+}
+
+.address-card{
+
+    position:relative;
+
+    background:#fff;
+
+    border:1px solid #e2e8f0;
+
+    border-radius:24px;
+
+    padding:28px;
+
+    transition:.35s;
+
+}
+
+.address-card:hover{
+
+    transform:translateY(-6px);
+
+    box-shadow:0 18px 40px rgba(15,23,42,.08);
+
+}
+
+.address-type{
+
+    display:inline-flex;
+
+    padding:8px 16px;
+
+    border-radius:999px;
+
+    background:#eff6ff;
+
+    color:var(--primary);
+
+    font-size:13px;
+
+    font-weight:600;
+
+    margin-bottom:18px;
+
+}
+
+.address-card h5{
+
+    font-size:20px;
+
+    font-weight:700;
+
+    margin-bottom:12px;
+
+}
+
+.address-card p{
+
+    color:#64748b;
+
+    line-height:1.8;
+
+    margin-bottom:18px;
+
+}
+
+.address-actions{
+
+    display:flex;
+
+    gap:12px;
+
+}
+
+
+/* ==========================================================
+   WISHLIST PREVIEW
+========================================================== */
+
+.wishlist-preview{
+
+    margin-top:50px;
+
+}
+
+.wishlist-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:22px;
+
+}
+
+.wishlist-card{
+
+    background:#fff;
+
+    border-radius:22px;
+
+    overflow:hidden;
+
+    border:1px solid #eef2f7;
+
+    transition:.35s;
+
+}
+
+.wishlist-card:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:0 20px 45px rgba(15,23,42,.08);
+
+}
+
+.wishlist-card img{
+
+    width:100%;
+
+    height:220px;
+
+    object-fit:contain;
+
+    background:#f8fafc;
+
+}
+
+.wishlist-body{
+
+    padding:20px;
+
+}
+
+.wishlist-body h5{
+
+    font-size:18px;
+
+    font-weight:700;
+
+    margin-bottom:10px;
+
+}
+
+.wishlist-price{
+
+    color:var(--primary);
+
+    font-size:22px;
+
+    font-weight:700;
+
+}
+
+
+/* ==========================================================
+   QUICK ACTIONS
+========================================================== */
+
+.quick-actions{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:20px;
+
+    margin-top:50px;
+
+}
+
+.quick-action{
+
+    background:#fff;
+
+    border-radius:22px;
+
+    padding:28px;
+
+    text-align:center;
+
+    border:1px solid #eef2f7;
+
+    transition:.35s;
+
+}
+
+.quick-action:hover{
+
+    transform:translateY(-6px);
+
+    box-shadow:0 18px 40px rgba(15,23,42,.08);
+
+}
+
+.quick-action i{
+
+    width:70px;
+
+    height:70px;
+
+    margin:auto;
+
+    margin-bottom:20px;
+
+    border-radius:20px;
+
+    background:#eff6ff;
+
+    color:var(--primary);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:28px;
+
+}
+
+.quick-action h5{
+
+    font-size:18px;
+
+    font-weight:700;
+
+    margin-bottom:10px;
+
+}
+
+.quick-action p{
+
+    color:#64748b;
+
+    margin:0;
+
+    font-size:14px;
+
+}
+
+
+/* ==========================================================
+   RECOMMENDED PRODUCTS
+========================================================== */
+
+.recommended-dashboard{
+
+    margin-top:60px;
+
+}
+
+.recommended-dashboard h3{
+
+    font-size:34px;
+
+    font-weight:800;
+
+    margin-bottom:35px;
+
+}
+
+.dashboard-products{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:24px;
+
+}
+
+.dashboard-product{
+
+    background:#fff;
+
+    border-radius:22px;
+
+    overflow:hidden;
+
+    border:1px solid #eef2f7;
+
+    transition:.35s;
+
+}
+
+.dashboard-product:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:0 22px 50px rgba(15,23,42,.08);
+
+}
+
+.dashboard-product img{
+
+    width:100%;
+
+    height:240px;
+
+    object-fit:contain;
+
+    background:#f8fafc;
+
+}
+
+.dashboard-product-body{
+
+    padding:22px;
+
+}
+
+.dashboard-product-body h5{
+
+    font-size:18px;
+
+    font-weight:700;
+
+    margin-bottom:10px;
+
+}
+
+.dashboard-product-price{
+
+    font-size:24px;
+
+    font-weight:800;
+
+    color:var(--primary);
+
+}
+
+
+/* ==========================================================
+   EMPTY STATE
+========================================================== */
+
+.dashboard-empty{
+
+    text-align:center;
+
+    padding:90px 20px;
+
+}
+
+.dashboard-empty i{
+
+    font-size:80px;
+
+    color:#cbd5e1;
+
+    margin-bottom:25px;
+
+}
+
+.dashboard-empty h3{
+
+    font-size:32px;
+
+    font-weight:700;
+
+    margin-bottom:15px;
+
+}
+
+.dashboard-empty p{
+
+    color:#64748b;
+
+    max-width:450px;
+
+    margin:auto;
+
+}
+
+
+/* ==========================================================
+   FADE ANIMATION
+========================================================== */
+
+.dashboard-card,
+
+.profile-card,
+
+.dashboard-stat,
+
+.quick-action,
+
+.address-card,
+
+.dashboard-product{
+
+    animation:dashboardFade .5s ease;
+
+}
+
+@keyframes dashboardFade{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(25px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:none;
+
+    }
+
+}
+
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media(max-width:1200px){
+
+.dashboard-products{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+.quick-actions{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+.wishlist-grid{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+}
+
+@media(max-width:768px){
+
+.dashboard-products{
+
+    grid-template-columns:1fr;
+
+}
+
+.quick-actions{
+
+    grid-template-columns:1fr;
+
+}
+
+.address-grid{
+
+    grid-template-columns:1fr;
+
+}
+
+.wishlist-grid{
+
+    grid-template-columns:1fr;
+
+}
+
+}
+
+@media(max-width:576px){
+
+.recommended-dashboard h3{
+
+    font-size:28px;
+
+}
+
+.dashboard-empty h3{
+
+    font-size:26px;
+
+}
+
+.address-card{
+
+    padding:22px;
+
+}
+
+}

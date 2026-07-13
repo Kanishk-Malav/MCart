@@ -1,0 +1,16 @@
+:root{
+
+    --primary:#111111;
+    --secondary:#5E5E5E;
+    --background:#FFFFFF;
+    --surface:#F7F7F7;
+    --border:#EAEAEA;
+
+    --success:#16A34A;
+    --danger:#DC2626;
+
+    --radius:18px;
+
+    --shadow:0 10px 30px rgba(0,0,0,.06);
+
+}

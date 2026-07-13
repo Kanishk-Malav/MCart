@@ -1,6 +1,7 @@
 {% load static %}
 
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -11,7 +12,8 @@
 
     <meta charset="UTF-8">
 
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="X-UA-Compatible"
+          content="IE=edge">
 
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
@@ -28,21 +30,16 @@
     <meta name="theme-color"
           content="#2563eb">
 
-    <!-- ==========================================================
-        TITLE
-    =========================================================== -->
-
     <title>
 
-        {% block title %}MCart{% endblock %}
+        {% block title %}
+
+            MCart
+
+        {% endblock %}
 
     </title>
 
-    <!-- ==========================================================
-        FAVICON
-    =========================================================== -->
-
-    
     <!-- ==========================================================
         GOOGLE FONTS
     =========================================================== -->
@@ -93,32 +90,12 @@
         PAGE CSS
     =========================================================== -->
 
-    <link rel="stylesheet"
-          href="{% static 'css/pages/home.css' %}">
+    {% block page_css %}
 
-    <link rel="stylesheet"
-          href="{% static 'css/pages/product.css' %}">
+<link rel="stylesheet"
+      href="{% static 'css/home.css' %}">
 
-    <link rel="stylesheet"
-          href="{% static 'css/pages/seller.css' %}">
-
-    <link rel="stylesheet"
-          href="{% static 'css/pages/cart.css' %}">
-
-    <link rel="stylesheet"
-          href="{% static 'css/pages/checkout.css' %}">
-
-    <link rel="stylesheet"
-          href="{% static 'css/pages/auth.css' %}">
-
-    <link rel="stylesheet"
-          href="{% static 'css/pages/dashboard.css' %}">
-
-    <link rel="stylesheet"
-          href="{% static 'css/pages/profile.css' %}">
-
-    <link rel="stylesheet"
-          href="{% static 'css/pages/wishlist.css' %}">
+{% endblock %}
 
     <!-- ==========================================================
         EXTRA CSS
@@ -139,11 +116,11 @@
 
     <div class="container">
 
-        <div class="d-flex justify-content-between align-items-center">
+        <div class="announcement-content">
 
             <div class="announcement-left">
 
-                <i class="bi bi-truck"></i>
+                <i class="bi bi-lightning-charge-fill"></i>
 
                 <span>
 
@@ -157,7 +134,7 @@
 
                 <a href="{% url 'shop:become_seller' %}">
 
-                    Become a Seller
+                    Become Seller
 
                 </a>
 
@@ -185,7 +162,6 @@
 
 </div>
 
-
 <!-- ==========================================================
     HEADER
 ========================================================== -->
@@ -200,22 +176,28 @@
                  LOGO
             =========================== -->
 
-            <a class="navbar-brand brand-logo"
+            <a
 
-               href="{% url 'shop:home' %}">
+                href="{% url 'shop:home' %}"
 
-                <span class="brand-primary">
+                class="navbar-brand brand-logo">
+
+                <span class="brand-icon">
 
                     M
 
                 </span>
 
-                Cart
+                <span class="brand-text">
+
+                    Cart
+
+                </span>
 
             </a>
 
             <!-- ==========================
-                 MOBILE TOGGLE
+                 MOBILE BUTTON
             =========================== -->
 
             <button
@@ -232,12 +214,11 @@
 
             </button>
 
-
-            <!-- ==========================
-                 DESKTOP MENU
-            =========================== -->
-
             <div class="collapse navbar-collapse">
+
+                <!-- ==========================
+                     NAVIGATION
+                =========================== -->
 
                 <ul class="navbar-nav mx-auto">
 
@@ -273,9 +254,9 @@
 
                         <a
 
-                            class="nav-link dropdown-toggle"
-
                             href="#"
+
+                            class="nav-link dropdown-toggle"
 
                             data-bs-toggle="dropdown">
 
@@ -374,7 +355,7 @@
                      RIGHT SECTION
                 =========================== -->
 
-                <div class="navbar-right d-flex align-items-center">
+                <div class="navbar-right">
 
                     <!-- Search -->
 
@@ -384,25 +365,31 @@
 
                         method="GET"
 
-                        class="navbar-search position-relative">
+                        class="navbar-search">
 
-                        <div class="search-wrapper">
+                        <div class="search-box">
 
-                            <i class="bi bi-search search-icon"></i>
+                            <i class="bi bi-search"></i>
 
                             <input
 
                                 type="search"
 
-                                name="q"
-
                                 id="search-input"
 
-                                class="search-input"
+                                name="q"
 
                                 placeholder="Search products..."
 
                                 autocomplete="off">
+
+                            <button
+
+                                type="submit">
+
+                                Search
+
+                            </button>
 
                         </div>
 
@@ -416,6 +403,7 @@
 
                     </form>
 
+
                     <!-- Wishlist -->
 
                     {% if user.is_authenticated %}
@@ -424,13 +412,13 @@
 
                         href="{% url 'shop:wishlist' %}"
 
-                        class="nav-action">
+                        class="nav-icon">
 
                         <i class="bi bi-heart"></i>
 
-                        {% if wishlist_count > 0 %}
+                        {% if wishlist_count %}
 
-                        <span class="action-badge">
+                        <span class="badge-count">
 
                             {{ wishlist_count }}
 
@@ -442,19 +430,20 @@
 
                     {% endif %}
 
+
                     <!-- Cart -->
 
                     <a
 
                         href="{% url 'shop:view_cart' %}"
 
-                        class="nav-action">
+                        class="nav-icon">
 
                         <i class="bi bi-bag"></i>
 
-                        {% if cart_items_count > 0 %}
+                        {% if cart_items_count %}
 
-                        <span class="action-badge">
+                        <span class="badge-count">
 
                             {{ cart_items_count }}
 
@@ -464,17 +453,16 @@
 
                     </a>
 
+
                     <!-- User -->
 
                     {% if user.is_authenticated %}
 
                     <div class="dropdown">
 
-                        <a
+                        <button
 
-                            href="#"
-
-                            class="nav-user dropdown-toggle"
+                            class="user-dropdown"
 
                             data-bs-toggle="dropdown">
 
@@ -486,9 +474,11 @@
 
                             </span>
 
-                        </a>
+                            <i class="bi bi-chevron-down"></i>
 
-                        <ul class="dropdown-menu dropdown-menu-end shadow">
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-menu-end">
 
                             <li>
 
@@ -498,7 +488,7 @@
 
                                     href="{% url 'shop:user_profile' %}">
 
-                                    <i class="bi bi-person me-2"></i>
+                                    <i class="bi bi-person"></i>
 
                                     My Profile
 
@@ -514,9 +504,9 @@
 
                                     href="{% url 'shop:order_list' %}">
 
-                                    <i class="bi bi-box-seam me-2"></i>
+                                    <i class="bi bi-box-seam"></i>
 
-                                    My Orders
+                                    Orders
 
                                 </a>
 
@@ -530,7 +520,7 @@
 
                                     href="{% url 'shop:wishlist' %}">
 
-                                    <i class="bi bi-heart me-2"></i>
+                                    <i class="bi bi-heart"></i>
 
                                     Wishlist
 
@@ -548,7 +538,7 @@
 
                                     href="{% url 'shop:seller_dashboard' %}">
 
-                                    <i class="bi bi-shop me-2"></i>
+                                    <i class="bi bi-shop"></i>
 
                                     Seller Dashboard
 
@@ -572,7 +562,7 @@
 
                                     href="{% url 'shop:website_logout' %}">
 
-                                    <i class="bi bi-box-arrow-right me-2"></i>
+                                    <i class="bi bi-box-arrow-right"></i>
 
                                     Logout
 
@@ -586,7 +576,7 @@
 
                     {% else %}
 
-                    <div class="auth-buttons">
+                    <div class="auth-actions">
 
                         <a
 
@@ -599,6 +589,8 @@
                         </a>
 
                         <button
+
+                            type="button"
 
                             class="btn btn-primary"
 
@@ -633,7 +625,9 @@
 
     tabindex="-1"
 
-    id="mobileMenu">
+    id="mobileMenu"
+
+    aria-labelledby="mobileMenuLabel">
 
     <div class="offcanvas-header">
 
@@ -643,13 +637,17 @@
 
             class="navbar-brand brand-logo">
 
-            <span class="brand-primary">
+            <span class="brand-icon">
 
                 M
 
             </span>
 
-            Cart
+            <span class="brand-text">
+
+                Cart
+
+            </span>
 
         </a>
 
@@ -659,7 +657,9 @@
 
             class="btn-close"
 
-            data-bs-dismiss="offcanvas">
+            data-bs-dismiss="offcanvas"
+
+            aria-label="Close">
 
         </button>
 
@@ -675,17 +675,15 @@
 
             method="GET"
 
-            class="mobile-search mb-4">
+            class="mobile-search">
 
-            <div class="search-wrapper">
+            <div class="search-box">
 
-                <i class="bi bi-search search-icon"></i>
+                <i class="bi bi-search"></i>
 
                 <input
 
                     type="search"
-
-                    class="search-input"
 
                     name="q"
 
@@ -697,15 +695,11 @@
 
         <!-- Navigation -->
 
-        <ul class="navbar-nav mobile-nav">
+        <ul class="mobile-nav">
 
-            <li class="nav-item">
+            <li>
 
-                <a
-
-                    href="{% url 'shop:home' %}"
-
-                    class="nav-link">
+                <a href="{% url 'shop:home' %}">
 
                     <i class="bi bi-house"></i>
 
@@ -715,13 +709,9 @@
 
             </li>
 
-            <li class="nav-item">
+            <li>
 
-                <a
-
-                    href="{% url 'shop:product_list' %}"
-
-                    class="nav-link">
+                <a href="{% url 'shop:product_list' %}">
 
                     <i class="bi bi-grid"></i>
 
@@ -731,13 +721,9 @@
 
             </li>
 
-            <li class="nav-item">
+            <li>
 
-                <a
-
-                    href="{% url 'shop:seller_list' %}"
-
-                    class="nav-link">
+                <a href="{% url 'shop:seller_list' %}">
 
                     <i class="bi bi-shop"></i>
 
@@ -747,13 +733,9 @@
 
             </li>
 
-            <li class="nav-item">
+            <li>
 
-                <a
-
-                    href="{% url 'blog:index' %}"
-
-                    class="nav-link">
+                <a href="{% url 'blog:index' %}">
 
                     <i class="bi bi-journal-text"></i>
 
@@ -763,13 +745,9 @@
 
             </li>
 
-            <li class="nav-item">
+            <li>
 
-                <a
-
-                    href="{% url 'shop:about' %}"
-
-                    class="nav-link">
+                <a href="{% url 'shop:about' %}">
 
                     <i class="bi bi-info-circle"></i>
 
@@ -785,15 +763,11 @@
 
         {% if user.is_authenticated %}
 
-        <ul class="navbar-nav mobile-nav">
+        <ul class="mobile-nav">
 
             <li>
 
-                <a
-
-                    href="{% url 'shop:user_profile' %}"
-
-                    class="nav-link">
+                <a href="{% url 'shop:user_profile' %}">
 
                     <i class="bi bi-person"></i>
 
@@ -805,15 +779,11 @@
 
             <li>
 
-                <a
+                <a href="{% url 'shop:order_list' %}">
 
-                    href="{% url 'shop:order_list' %}"
+                    <i class="bi bi-box-seam"></i>
 
-                    class="nav-link">
-
-                    <i class="bi bi-box"></i>
-
-                    My Orders
+                    Orders
 
                 </a>
 
@@ -821,11 +791,7 @@
 
             <li>
 
-                <a
-
-                    href="{% url 'shop:wishlist' %}"
-
-                    class="nav-link">
+                <a href="{% url 'shop:wishlist' %}">
 
                     <i class="bi bi-heart"></i>
 
@@ -837,25 +803,11 @@
 
             <li>
 
-                <a
+                <a href="{% url 'shop:view_cart' %}">
 
-                    href="{% url 'shop:view_cart' %}"
-
-                    class="nav-link">
-
-                    <i class="bi bi-cart3"></i>
+                    <i class="bi bi-bag"></i>
 
                     Cart
-
-                    {% if cart_items_count > 0 %}
-
-                    <span class="badge bg-danger ms-2">
-
-                        {{ cart_items_count }}
-
-                    </span>
-
-                    {% endif %}
 
                 </a>
 
@@ -865,11 +817,7 @@
 
             <li>
 
-                <a
-
-                    href="{% url 'shop:seller_dashboard' %}"
-
-                    class="nav-link">
+                <a href="{% url 'shop:seller_dashboard' %}">
 
                     <i class="bi bi-speedometer2"></i>
 
@@ -887,7 +835,7 @@
 
                     href="{% url 'shop:website_logout' %}"
 
-                    class="nav-link text-danger">
+                    class="text-danger">
 
                     <i class="bi bi-box-arrow-right"></i>
 
@@ -901,13 +849,13 @@
 
         {% else %}
 
-        <div class="d-grid gap-3">
+        <div class="mobile-auth">
 
             <a
 
                 href="{% url 'shop:website_login' %}"
 
-                class="btn btn-outline-primary">
+                class="btn btn-outline-primary w-100 mb-3">
 
                 Login
 
@@ -915,13 +863,13 @@
 
             <button
 
-                class="btn btn-primary"
+                class="btn btn-primary w-100"
 
                 data-bs-toggle="modal"
 
                 data-bs-target="#registerModal">
 
-                Create Account
+                Register
 
             </button>
 
@@ -934,169 +882,52 @@
 </div>
 
 <!-- ==========================================================
-    PAGE WRAPPER
-========================================================== -->
-
-<main class="site-content">
-  <!-- ==========================================================
     FLASH MESSAGES
 ========================================================== -->
 
 {% if messages %}
 
-<section class="message-section py-3">
+<div class="container mt-3">
 
-    <div class="container">
+    {% for message in messages %}
 
-        {% for message in messages %}
+    <div
 
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm">
+        class="alert alert-{{ message.tags }} alert-dismissible fade show"
 
-            <div class="d-flex align-items-center">
+        role="alert">
 
-                {% if message.tags == "success" %}
+        {{ message }}
 
-                <i class="bi bi-check-circle-fill me-2"></i>
+        <button
 
-                {% elif message.tags == "error" %}
+            type="button"
 
-                <i class="bi bi-x-circle-fill me-2"></i>
+            class="btn-close"
 
-                {% elif message.tags == "warning" %}
+            data-bs-dismiss="alert">
 
-                <i class="bi bi-exclamation-triangle-fill me-2"></i>
-
-                {% else %}
-
-                <i class="bi bi-info-circle-fill me-2"></i>
-
-                {% endif %}
-
-                <span>
-
-                    {{ message }}
-
-                </span>
-
-            </div>
-
-            <button
-
-                type="button"
-
-                class="btn-close"
-
-                data-bs-dismiss="alert">
-
-            </button>
-
-        </div>
-
-        {% endfor %}
+        </button>
 
     </div>
 
-</section>
+    {% endfor %}
+
+</div>
 
 {% endif %}
 
-
 <!-- ==========================================================
-    MAIN CONTENT
+    PAGE CONTENT
 ========================================================== -->
 
-<section class="page-wrapper">
+<main class="site-main">
 
-    <div class="container">
+{% block content %}
 
-        {% block content %}
+{% endblock %}
 
-        {% endblock %}
-
-    </div>
-
-</section>
-
-
-<!-- ==========================================================
-    NEWSLETTER
-========================================================== -->
-
-<section class="newsletter-section">
-
-    <div class="container">
-
-        <div class="newsletter-card">
-
-            <div class="row align-items-center">
-
-                <div class="col-lg-6">
-
-                    <span class="newsletter-subtitle">
-
-                        Stay Updated
-
-                    </span>
-
-                    <h2>
-
-                        Subscribe to our Newsletter
-
-                    </h2>
-
-                    <p>
-
-                        Get the latest products, exclusive offers and updates directly in your inbox.
-
-                    </p>
-
-                </div>
-
-                <div class="col-lg-6">
-
-                    <form
-
-                        class="newsletter-form"
-
-                        method="post">
-
-                        {% csrf_token %}
-
-                        <div class="input-group">
-
-                            <input
-
-                                type="email"
-
-                                class="form-control"
-
-                                placeholder="Enter your email"
-
-                                required>
-
-                            <button
-
-                                class="btn btn-primary"
-
-                                type="submit">
-
-                                Subscribe
-
-                            </button>
-
-                        </div>
-
-                    </form>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
+</main>
 <!-- ==========================================================
     FOOTER
 ========================================================== -->
@@ -1105,9 +936,11 @@
 
     <div class="container">
 
-        <div class="row g-5">
+        <div class="row gy-5">
 
-            <!-- Brand -->
+            <!-- ==========================
+                 BRAND
+            =========================== -->
 
             <div class="col-lg-4">
 
@@ -1117,72 +950,66 @@
 
                     class="footer-logo">
 
-                    <span>
+                    <span class="brand-icon">
 
                         M
 
                     </span>
 
-                    Cart
+                    <span class="brand-text">
+
+                        Cart
+
+                    </span>
 
                 </a>
 
                 <p class="footer-description">
 
-                    MCart is a modern multi-vendor marketplace where customers
-                    can discover quality products from trusted sellers across
-                    India.
+                    MCart is a modern multi-vendor marketplace built to
+                    connect customers with trusted sellers across India.
 
                 </p>
 
                 <div class="footer-social">
 
-                    <a href="#">
+                    <a href="#"><i class="bi bi-facebook"></i></a>
 
-                        <i class="bi bi-facebook"></i>
+                    <a href="#"><i class="bi bi-instagram"></i></a>
 
-                    </a>
+                    <a href="#"><i class="bi bi-twitter-x"></i></a>
 
-                    <a href="#">
+                    <a href="#"><i class="bi bi-linkedin"></i></a>
 
-                        <i class="bi bi-instagram"></i>
-
-                    </a>
-
-                    <a href="#">
-
-                        <i class="bi bi-twitter-x"></i>
-
-                    </a>
-
-                    <a href="#">
-
-                        <i class="bi bi-linkedin"></i>
-
-                    </a>
-
-                    <a href="#">
-
-                        <i class="bi bi-github"></i>
-
-                    </a>
+                    <a href="#"><i class="bi bi-github"></i></a>
 
                 </div>
 
             </div>
 
-
-            <!-- Shop -->
+            <!-- ==========================
+                 QUICK LINKS
+            =========================== -->
 
             <div class="col-lg-2 col-md-6">
 
                 <h5>
 
-                    Shop
+                    Quick Links
 
                 </h5>
 
-                <ul>
+                <ul class="footer-links">
+
+                    <li>
+
+                        <a href="{% url 'shop:home' %}">
+
+                            Home
+
+                        </a>
+
+                    </li>
 
                     <li>
 
@@ -1206,19 +1033,9 @@
 
                     <li>
 
-                        <a href="{% url 'shop:search' %}">
+                        <a href="{% url 'blog:index' %}">
 
-                            Search
-
-                        </a>
-
-                    </li>
-
-                    <li>
-
-                        <a href="{% url 'shop:about' %}">
-
-                            About
+                            Blog
 
                         </a>
 
@@ -1228,8 +1045,9 @@
 
             </div>
 
-
-            <!-- Customer -->
+            <!-- ==========================
+                 CUSTOMER
+            =========================== -->
 
             <div class="col-lg-3 col-md-6">
 
@@ -1239,7 +1057,7 @@
 
                 </h5>
 
-                <ul>
+                <ul class="footer-links">
 
                     {% if user.is_authenticated %}
 
@@ -1257,7 +1075,7 @@
 
                         <a href="{% url 'shop:order_list' %}">
 
-                            Orders
+                            My Orders
 
                         </a>
 
@@ -1317,8 +1135,9 @@
 
             </div>
 
-
-            <!-- Contact -->
+            <!-- ==========================
+                 CONTACT
+            =========================== -->
 
             <div class="col-lg-3">
 
@@ -1334,7 +1153,7 @@
 
                         <i class="bi bi-geo-alt"></i>
 
-                        Rajasthan, India
+                        Kota, Rajasthan, India
 
                     </li>
 
@@ -1360,9 +1179,7 @@
 
         </div>
 
-
         <hr class="footer-divider">
-
 
         <div class="footer-bottom">
 
@@ -1380,7 +1197,7 @@
 
             </div>
 
-            <div class="payment-icons">
+            <div class="footer-payments">
 
                 <i class="bi bi-credit-card"></i>
 
@@ -1401,51 +1218,28 @@
     REGISTER MODAL
 ========================================================== -->
 
-<div
+<div class="modal fade"
+     id="registerModal"
+     tabindex="-1"
+     aria-labelledby="registerModalLabel"
+     aria-hidden="true">
 
-    class="modal fade"
-
-    id="registerModal"
-
-    tabindex="-1"
-
-    aria-labelledby="registerModalLabel"
-
-    aria-hidden="true">
-
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered">
 
         <div class="modal-content auth-modal">
 
-            <div class="modal-header border-0 pb-0">
+            <div class="modal-header">
 
-                <div>
+                <h5 class="modal-title"
+                    id="registerModalLabel">
 
-                    <h3
+                    Create Account
 
-                        class="modal-title"
+                </h5>
 
-                        id="registerModalLabel">
-
-                        Create Your Account
-
-                    </h3>
-
-                    <p class="text-muted mb-0">
-
-                        Join MCart and start shopping today.
-
-                    </p>
-
-                </div>
-
-                <button
-
-                    type="button"
-
-                    class="btn-close"
-
-                    data-bs-dismiss="modal">
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
 
                 </button>
 
@@ -1457,55 +1251,8 @@
 
                     {% csrf_token %}
 
-                    <div
-
-                        id="registerError"
-
-                        class="alert alert-danger d-none">
-
-                    </div>
-
-                    <div class="row">
-
-                        <div class="col-md-6 mb-3">
-
-                            <label class="form-label">
-
-                                First Name
-
-                            </label>
-
-                            <input
-
-                                type="text"
-
-                                id="reg_first_name"
-
-                                class="form-control"
-
-                                placeholder="John">
-
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-
-                            <label class="form-label">
-
-                                Last Name
-
-                            </label>
-
-                            <input
-
-                                type="text"
-
-                                id="reg_last_name"
-
-                                class="form-control"
-
-                                placeholder="Doe">
-
-                        </div>
+                    <div id="registerError"
+                         class="alert alert-danger d-none">
 
                     </div>
 
@@ -1517,17 +1264,10 @@
 
                         </label>
 
-                        <input
-
-                            type="text"
-
-                            id="reg_username"
-
-                            class="form-control"
-
-                            placeholder="john_doe"
-
-                            required>
+                        <input type="text"
+                               id="reg_username"
+                               class="form-control"
+                               required>
 
                     </div>
 
@@ -1535,25 +1275,18 @@
 
                         <label class="form-label">
 
-                            Email Address
+                            Email
 
                         </label>
 
-                        <input
-
-                            type="email"
-
-                            id="reg_email"
-
-                            class="form-control"
-
-                            placeholder="example@email.com"
-
-                            required>
+                        <input type="email"
+                               id="reg_email"
+                               class="form-control"
+                               required>
 
                     </div>
 
-                    <div class="mb-4">
+                    <div class="mb-3">
 
                         <label class="form-label">
 
@@ -1561,27 +1294,16 @@
 
                         </label>
 
-                        <input
-
-                            type="password"
-
-                            id="reg_password"
-
-                            class="form-control"
-
-                            placeholder="••••••••"
-
-                            required>
+                        <input type="password"
+                               id="reg_password"
+                               class="form-control"
+                               required>
 
                     </div>
 
-                    <button
-
-                        id="registerButton"
-
-                        type="submit"
-
-                        class="btn btn-primary w-100">
+                    <button type="submit"
+                            id="registerButton"
+                            class="btn btn-primary w-100">
 
                         <span id="registerButtonText">
 
@@ -1589,11 +1311,8 @@
 
                         </span>
 
-                        <span
-
-                            id="registerSpinner"
-
-                            class="spinner-border spinner-border-sm ms-2 d-none">
+                        <span id="registerSpinner"
+                              class="spinner-border spinner-border-sm d-none ms-2">
 
                         </span>
 
@@ -1603,102 +1322,61 @@
 
             </div>
 
-            <div class="modal-footer border-0 justify-content-center">
-
-                <small class="text-muted">
-
-                    Already have an account?
-
-                    <a
-
-                        href="{% url 'shop:website_login' %}"
-
-                        class="text-decoration-none">
-
-                        Login
-
-                    </a>
-
-                </small>
-
-            </div>
-
         </div>
 
     </div>
 
 </div>
+
 <!-- ==========================================================
-    BOOTSTRAP JS
+    BOOTSTRAP
 ========================================================== -->
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 
 <!-- ==========================================================
-    SEARCH SUGGESTIONS
+    COMMON JS
 ========================================================== -->
 
 <script>
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    const searchInput = document.getElementById("search-input");
+    // ===============================
+    // Auto Hide Alerts
+    // ===============================
 
-    const suggestionBox = document.getElementById("search-suggestions");
+    setTimeout(function () {
 
-    let timeout;
+        document.querySelectorAll(".alert").forEach(function (alert) {
 
-    if(searchInput){
-
-        searchInput.addEventListener("input", function(){
-
-            clearTimeout(timeout);
-
-            const query = this.value.trim();
-
-            if(query.length < 2){
-
-                suggestionBox.innerHTML = "";
-
-                suggestionBox.style.display = "none";
-
-                return;
-
-            }
-
-            timeout = setTimeout(function(){
-
-                suggestionBox.innerHTML = `
-
-                    <a href="/search/?q=${encodeURIComponent(query)}" class="dropdown-item">
-
-                        <i class="bi bi-search"></i>
-
-                        Search "<strong>${query}</strong>"
-
-                    </a>
-
-                    <a href="/search/" class="dropdown-item">
-
-                        <i class="bi bi-grid"></i>
-
-                        Browse Products
-
-                    </a>
-
-                `;
-
-                suggestionBox.style.display = "block";
-
-            },300);
+            bootstrap.Alert.getOrCreateInstance(alert).close();
 
         });
 
-        document.addEventListener("click",function(e){
+    }, 5000);
 
-            if(!searchInput.contains(e.target) && !suggestionBox.contains(e.target)){
+    // ===============================
+    // Search Dropdown
+    // ===============================
 
-                suggestionBox.style.display="none";
+    const input = document.getElementById("search-input");
+
+    const dropdown = document.getElementById("search-suggestions");
+
+    if (input && dropdown) {
+
+        input.addEventListener("focus", function () {
+
+            dropdown.style.display = "block";
+
+        });
+
+        document.addEventListener("click", function (e) {
+
+            if (!e.target.closest(".navbar-search")) {
+
+                dropdown.style.display = "none";
 
             }
 
@@ -1711,140 +1389,12 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 <!-- ==========================================================
-    REGISTER AJAX
+    PAGE JS
 ========================================================== -->
 
-<script>
+{% block page_js %}
 
-document.addEventListener("DOMContentLoaded",function(){
-
-    const form=document.getElementById("registerForm");
-
-    if(!form) return;
-
-    form.addEventListener("submit",async function(e){
-
-        e.preventDefault();
-
-        const btn=document.getElementById("registerButton");
-
-        const text=document.getElementById("registerButtonText");
-
-        const spinner=document.getElementById("registerSpinner");
-
-        const error=document.getElementById("registerError");
-
-        btn.disabled=true;
-
-        spinner.classList.remove("d-none");
-
-        text.innerHTML="Creating Account...";
-
-        error.classList.add("d-none");
-
-        try{
-
-            const response=await fetch("/api/auth/register/",{
-
-                method:"POST",
-
-                headers:{
-
-                    "Content-Type":"application/json",
-
-                    "X-CSRFToken":document.querySelector("[name=csrfmiddlewaretoken]").value
-
-                },
-
-                body:JSON.stringify({
-
-                    username:document.getElementById("reg_username").value,
-
-                    email:document.getElementById("reg_email").value,
-
-                    password:document.getElementById("reg_password").value,
-
-                    first_name:document.getElementById("reg_first_name").value,
-
-                    last_name:document.getElementById("reg_last_name").value
-
-                })
-
-            });
-
-            const data=await response.json();
-
-            if(response.ok){
-
-                form.reset();
-
-                bootstrap.Modal.getInstance(document.getElementById("registerModal")).hide();
-
-                location.reload();
-
-            }
-
-            else{
-
-                error.classList.remove("d-none");
-
-                error.innerHTML=
-
-                    data.detail ||
-
-                    data.username?.[0] ||
-
-                    data.email?.[0] ||
-
-                    data.password?.[0] ||
-
-                    "Registration Failed";
-
-            }
-
-        }
-
-        catch{
-
-            error.classList.remove("d-none");
-
-            error.innerHTML="Something went wrong.";
-
-        }
-
-        finally{
-
-            btn.disabled=false;
-
-            spinner.classList.add("d-none");
-
-            text.innerHTML="Create Account";
-
-        }
-
-    });
-
-});
-
-</script>
-
-<!-- ==========================================================
-    AUTO HIDE ALERTS
-========================================================== -->
-
-<script>
-
-setTimeout(function(){
-
-    document.querySelectorAll(".alert").forEach(function(alert){
-
-        bootstrap.Alert.getOrCreateInstance(alert).close();
-
-    });
-
-},5000);
-
-</script>
+{% endblock %}
 
 <!-- ==========================================================
     EXTRA JS
@@ -1853,8 +1403,6 @@ setTimeout(function(){
 {% block extra_js %}
 
 {% endblock %}
-
-</main>
 
 </body>
 
